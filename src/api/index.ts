@@ -1,8 +1,2 @@
-import request from '../utils/request';
+import request from '../utils/http';
 
-export const fetchData = () => {
-    return request({
-        url: './table.json',
-        method: 'get'
-    });
-};

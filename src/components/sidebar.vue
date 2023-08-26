@@ -1,3 +1,151 @@
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
+import { useSidebarStore } from '../store/sidebar';
+import { useRoute } from 'vue-router';
+
+const items = [
+    {
+        icon: 'Odometer',
+        index: '/dashboard',
+        title: '系统首页',
+        permiss: '1',
+    },
+    {
+        icon: 'Calendar',
+        index: '5',
+        title: '管理员相关',
+        permiss: '1',
+        subs: [
+            {
+                index: '/adminuser',
+                title: '管理员信息',
+                permiss: '1',
+            },
+            {
+                index: '/adminuser',
+                title: '角色组信息',
+                permiss: '1',
+            },
+            {
+                index: '/adminuser',
+                title: '管理员日志',
+                permiss: '1',
+            },
+        ],
+    },
+    {
+        icon: 'Calendar',
+        index: '2',
+        title: '会员相关',
+        permiss: '1',
+        subs: [
+            {
+                index: '/users',
+                title: '会员信息',
+                permiss: '1',
+            },
+            {
+                index: '/users',
+                title: '会员分组管理',
+                permiss: '1',
+            },
+            {
+                index: '/MoneyLog',
+                title: '会员余额管理',
+                permiss: '1',
+            },
+            {
+                index: '/ScoreLog',
+                title: '会员积分管理',
+                permiss: '1',
+            },
+        ],
+    },
+    {
+        icon: 'Calendar',
+        index: '7',
+        title: '运营管理',
+        permiss: '1',
+        subs: [
+            {
+                index: '/adminuser',
+                title: '系统配置',
+                permiss: '1',
+            },
+            {
+                index: '/web',
+                title: '网站配置',
+                permiss: '16',
+            },
+        ],
+    },
+    {
+        icon: 'DocumentCopy',
+        index: '/tabs',
+        title: 'tab选项卡',
+        permiss: '3',
+    },
+    {
+        icon: 'Edit',
+        index: '3',
+        title: '表单相关',
+        permiss: '4',
+        subs: [
+            {
+                index: '/form',
+                title: '基本表单',
+                permiss: '5',
+            },
+            {
+                index: '/upload',
+                title: '文件上传',
+                permiss: '6',
+            },
+            {
+                index: '4',
+                title: '三级菜单',
+                permiss: '7',
+                subs: [
+                    {
+                        index: '/editor',
+                        title: '富文本编辑器',
+                        permiss: '8',
+                    },
+                    {
+                        index: '/markdown',
+                        title: 'markdown编辑器',
+                        permiss: '9',
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        icon: 'PieChart',
+        index: '/charts',
+        title: 'schart图表',
+        permiss: '11',
+    },
+    {
+        icon: 'Warning',
+        index: '/permission',
+        title: '权限管理',
+        permiss: '13',
+    },
+    
+];
+
+const route = useRoute();
+const onRoutes = computed(() => {
+    return route.path;
+});
+
+const sidebar = useSidebarStore();
+
+
+
+</script>
+
 <template>
     <div class="sidebar">
         <el-menu
@@ -50,122 +198,14 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue';
-import { useSidebarStore } from '../store/sidebar';
-import { useRoute } from 'vue-router';
 
-const items = [
-    {
-        icon: 'Odometer',
-        index: '/dashboard',
-        title: '系统首页',
-        permiss: '1',
-    },
-    {
-        icon: 'Calendar',
-        index: '1',
-        title: '表格相关',
-        permiss: '2',
-        subs: [
-            {
-                index: '/table',
-                title: '常用表格',
-                permiss: '2',
-            },
-            {
-                index: '/import',
-                title: '导入Excel',
-                permiss: '2',
-            },
-            {
-                index: '/export',
-                title: '导出Excel',
-                permiss: '2',
-            },
-        ],
-    },
-    {
-        icon: 'DocumentCopy',
-        index: '/tabs',
-        title: 'tab选项卡',
-        permiss: '3',
-    },
-    {
-        icon: 'Edit',
-        index: '3',
-        title: '表单相关',
-        permiss: '4',
-        subs: [
-            {
-                index: '/form',
-                title: '基本表单',
-                permiss: '5',
-            },
-            {
-                index: '/upload',
-                title: '文件上传',
-                permiss: '6',
-            },
-            {
-                index: '4',
-                title: '三级菜单',
-                permiss: '7',
-                subs: [
-                    {
-                        index: '/editor',
-                        title: '富文本编辑器',
-                        permiss: '8',
-                    },
-                    {
-                        index: '/markdown',
-                        title: 'markdown编辑器',
-                        permiss: '9',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        icon: 'Setting',
-        index: '/icon',
-        title: '自定义图标',
-        permiss: '10',
-    },
-    {
-        icon: 'PieChart',
-        index: '/charts',
-        title: 'schart图表',
-        permiss: '11',
-    },
-    {
-        icon: 'Warning',
-        index: '/permission',
-        title: '权限管理',
-        permiss: '13',
-    },
-    {
-        icon: 'CoffeeCup',
-        index: '/donate',
-        title: '支持作者',
-        permiss: '14',
-    },
-];
-
-const route = useRoute();
-const onRoutes = computed(() => {
-    return route.path;
-});
-
-const sidebar = useSidebarStore();
-</script>
 
 <style scoped>
 .sidebar {
     display: block;
     position: absolute;
     left: 0;
-    top: 70px;
+    top: 60px;
     bottom: 0;
     overflow-y: scroll;
 }

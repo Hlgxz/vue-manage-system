@@ -1,35 +1,3 @@
-<template>
-	<div class="tags" v-if="tags.show">
-		<ul>
-			<li
-				class="tags-li"
-				v-for="(item, index) in tags.list"
-				:class="{ active: isActive(item.path) }"
-				:key="index"
-			>
-				<router-link :to="item.path" class="tags-li-title">{{ item.title }}</router-link>
-				<el-icon @click="closeTags(index)"><Close /></el-icon>
-			</li>
-		</ul>
-		<div class="tags-close-box">
-			<el-dropdown @command="handleTags">
-				<el-button size="small" type="primary">
-					标签选项
-					<el-icon class="el-icon--right">
-						<arrow-down />
-					</el-icon>
-				</el-button>
-				<template #dropdown>
-					<el-dropdown-menu size="small">
-						<el-dropdown-item command="other">关闭其他</el-dropdown-item>
-						<el-dropdown-item command="all">关闭所有</el-dropdown-item>
-					</el-dropdown-menu>
-				</template>
-			</el-dropdown>
-		</div>
-	</div>
-</template>
-
 <script setup lang="ts">
 import { useTagsStore } from '../store/tags';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
@@ -95,10 +63,44 @@ const handleTags = (command: string) => {
 // });
 </script>
 
+<template>
+	<div class="tags" v-if="tags.show">
+		<ul>
+			<li
+				class="tags-li"
+				v-for="(item, index) in tags.list"
+				:class="{ active: isActive(item.path) }"
+				:key="index"
+			>
+				<router-link :to="item.path" class="tags-li-title">{{ item.title }}</router-link>
+				<el-icon @click="closeTags(index)"><Close /></el-icon>
+			</li>
+		</ul>
+		<div class="tags-close-box">
+			<el-dropdown @command="handleTags">
+				<el-button size="small" type="primary">
+					标签选项
+					<el-icon class="el-icon--right">
+						<arrow-down />
+					</el-icon>
+				</el-button>
+				<template #dropdown>
+					<el-dropdown-menu size="small">
+						<el-dropdown-item command="other">关闭其他</el-dropdown-item>
+						<el-dropdown-item command="all">关闭所有</el-dropdown-item>
+					</el-dropdown-menu>
+				</template>
+			</el-dropdown>
+		</div>
+	</div>
+</template>
+
+
+
 <style>
 .tags {
 	position: relative;
-	height: 30px;
+	height: 50px;
 	overflow: hidden;
 	background: #fff;
 	padding-right: 120px;
@@ -120,7 +122,7 @@ const handleTags = (command: string) => {
 	font-size: 12px;
 	overflow: hidden;
 	cursor: pointer;
-	height: 23px;
+	height: 40px;
 	border: 1px solid #e9eaec;
 	background: #fff;
 	padding: 0 5px 0 12px;

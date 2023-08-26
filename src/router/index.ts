@@ -22,14 +22,51 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
             },
             {
-                path: '/table',
-                name: 'basetable',
+                path: '/adminuser',
+                name: 'adminuser',
                 meta: {
-                    title: '表格',
-                    permiss: '2',
+                    title: '管理员设置',
+                    permiss: '6',
                 },
-                component: () => import(/* webpackChunkName: "table" */ '../views/table.vue'),
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/AdminUsers.vue'),
             },
+            {
+                path: '/Users',
+                name: 'Users',
+                meta: {
+                    title: '会员设置',
+                    permiss: '6',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/Users.vue'),
+            },
+            {
+                path: '/MoneyLog',
+                name: 'MoneyLog',
+                meta: {
+                    title: '会员余额',
+                    permiss: '6',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/MoneyLog.vue'),
+            },
+            {
+                path: '/ScoreLog',
+                name: 'ScoreLog',
+                meta: {
+                    title: '会员积分',
+                    permiss: '6',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/ScoreLog.vue'),
+            },
+            {
+                path: '/web',
+                name: 'web',
+                meta: {
+                    title: '网站配置',
+                    permiss: '16',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/web.vue'),
+            },
+            
             {
                 path: '/charts',
                 name: 'basecharts',
@@ -58,15 +95,6 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "tabs" */ '../views/tabs.vue'),
             },
             {
-                path: '/donate',
-                name: 'donate',
-                meta: {
-                    title: '鼓励作者',
-                    permiss: '14',
-                },
-                component: () => import(/* webpackChunkName: "donate" */ '../views/donate.vue'),
-            },
-            {
                 path: '/permission',
                 name: 'permission',
                 meta: {
@@ -84,15 +112,7 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "upload" */ '../views/upload.vue'),
             },
-            {
-                path: '/icon',
-                name: 'icon',
-                meta: {
-                    title: '自定义图标',
-                    permiss: '10',
-                },
-                component: () => import(/* webpackChunkName: "icon" */ '../views/icon.vue'),
-            },
+            
             {
                 path: '/user',
                 name: 'user',
@@ -128,15 +148,7 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "export" */ '../views/export.vue'),
             },
-            {
-                path: '/import',
-                name: 'import',
-                meta: {
-                    title: '导入Excel',
-                    permiss: '2',
-                },
-                component: () => import(/* webpackChunkName: "import" */ '../views/import.vue'),
-            },
+            
         ],
     },
     {
@@ -162,6 +174,7 @@ const router = createRouter({
     routes,
 });
 
+//导航守卫
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | vue-manage-system`;
     const role = localStorage.getItem('ms_username');

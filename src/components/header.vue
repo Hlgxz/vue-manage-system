@@ -1,3 +1,51 @@
+<script setup lang="ts">
+import { onMounted,ref } from 'vue';
+import { useSidebarStore } from '../store/sidebar';
+import { useRouter } from 'vue-router';
+import imgurl from '../assets/img/img.jpg';
+import { getSitesData } from '../api/sites';
+const username: string | null = localStorage.getItem('ms_username');
+const message: number = 2;
+const form = ref({
+  
+  region: '',
+  
+})
+const sidebar = useSidebarStore();
+// 侧边栏折叠
+const collapseChage = () => {
+	sidebar.handleCollapse();
+};
+
+onMounted(() => {
+	if (document.body.clientWidth < 1500) {
+		collapseChage();
+	}
+});
+
+// 用户名下拉菜单选择事件
+const router = useRouter();
+const handleCommand = (command: string) => {
+	if (command == 'loginout') {
+		localStorage.removeItem('ms_username');
+		router.push('/login');
+	} else if (command == 'user') {
+		router.push('/user');
+	}
+};
+
+//显示网页列表
+const weblest = ref();
+const getData = () =>{
+    getSitesData().then(res =>{
+        weblest.value =res.data.data
+		  console.log(weblest.value);
+		  
+    }
+)}
+
+onMounted(getData);
+</script>
 <template>
 	<div class="header">
 		<!-- 折叠按钮 -->
@@ -5,9 +53,18 @@
 			<el-icon v-if="sidebar.collapse"><Expand /></el-icon>
 			<el-icon v-else><Fold /></el-icon>
 		</div>
-		<div class="logo">后台管理系统</div>
+		<div class="logo">test</div>
 		<div class="header-right">
+			
+      
+    
 			<div class="header-user-con">
+				<div class="web-select">
+				<el-select v-model="form.region" placeholder="" size="small">
+			<el-option label="all" value="all" />
+        <el-option v-for="a in weblest" :label="a.name" :value="a.id" :key="a.id"/>
+      </el-select>
+	</div>
 				<!-- 消息中心 -->
 				<div class="btn-bell" @click="router.push('/tabs')">
 					<el-tooltip
@@ -31,9 +88,6 @@
 					</span>
 					<template #dropdown>
 						<el-dropdown-menu>
-							<a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-								<el-dropdown-item>项目仓库</el-dropdown-item>
-							</a>
 							<el-dropdown-item command="user">个人中心</el-dropdown-item>
 							<el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
 						</el-dropdown-menu>
@@ -43,44 +97,13 @@
 		</div>
 	</div>
 </template>
-<script setup lang="ts">
-import { onMounted } from 'vue';
-import { useSidebarStore } from '../store/sidebar';
-import { useRouter } from 'vue-router';
-import imgurl from '../assets/img/img.jpg';
 
-const username: string | null = localStorage.getItem('ms_username');
-const message: number = 2;
-
-const sidebar = useSidebarStore();
-// 侧边栏折叠
-const collapseChage = () => {
-	sidebar.handleCollapse();
-};
-
-onMounted(() => {
-	if (document.body.clientWidth < 1500) {
-		collapseChage();
-	}
-});
-
-// 用户名下拉菜单选择事件
-const router = useRouter();
-const handleCommand = (command: string) => {
-	if (command == 'loginout') {
-		localStorage.removeItem('ms_username');
-		router.push('/login');
-	} else if (command == 'user') {
-		router.push('/user');
-	}
-};
-</script>
 <style scoped>
 .header {
 	position: relative;
 	box-sizing: border-box;
 	width: 100%;
-	height: 70px;
+	height: 60px;
 	font-size: 22px;
 	color: #fff;
 }
@@ -96,7 +119,7 @@ const handleCommand = (command: string) => {
 .header .logo {
 	float: left;
 	width: 250px;
-	line-height: 70px;
+	line-height: 60px;
 }
 .header-right {
 	float: right;
@@ -104,7 +127,7 @@ const handleCommand = (command: string) => {
 }
 .header-user-con {
 	display: flex;
-	height: 70px;
+	height: 60px;
 	align-items: center;
 }
 .btn-fullscreen {
@@ -150,5 +173,8 @@ const handleCommand = (command: string) => {
 }
 .el-dropdown-menu__item {
 	text-align: center;
+}
+.web-select{
+	width: 100px;
 }
 </style>
