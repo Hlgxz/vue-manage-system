@@ -141,7 +141,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     formEl.validate((valid) => {
         if (valid) {
-            console.log(form);
+            
             ElMessage.success('提交成功！');
         } else {
             return false;

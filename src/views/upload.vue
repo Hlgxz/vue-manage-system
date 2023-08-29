@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 const handle = (rawFile: any) => {
-    console.log(rawFile);
+    
 };
 </script>
 

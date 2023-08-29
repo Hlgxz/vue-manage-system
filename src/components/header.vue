@@ -4,12 +4,13 @@ import { useSidebarStore } from '../store/sidebar';
 import { useRouter } from 'vue-router';
 import imgurl from '../assets/img/img.jpg';
 import { getSitesData } from '../api/sites';
+import { useMainStore } from '../store/webselect';
+import { useTagsStore } from '../store/tags';
+
 const username: string | null = localStorage.getItem('ms_username');
 const message: number = 2;
 const form = ref({
-  
   region: '',
-  
 })
 const sidebar = useSidebarStore();
 // 侧边栏折叠
@@ -27,7 +28,8 @@ onMounted(() => {
 const router = useRouter();
 const handleCommand = (command: string) => {
 	if (command == 'loginout') {
-		localStorage.removeItem('ms_username');
+		//localStorage.removeItem('ms_username');
+		localStorage.clear();
 		router.push('/login');
 	} else if (command == 'user') {
 		router.push('/user');
@@ -39,12 +41,22 @@ const weblest = ref();
 const getData = () =>{
     getSitesData().then(res =>{
         weblest.value =res.data.data
-		  console.log(weblest.value);
+		  
 		  
     }
 )}
-
+//拉起网页列表
 onMounted(getData);
+
+const tags = useTagsStore();
+//选择网页列表事件
+const handleWeb = (command: string) => {
+	
+	const store = useMainStore();
+	store.setActiveWebRoleId(command);
+	tags.clearTags();
+	router.push('/');
+};
 </script>
 <template>
 	<div class="header">
@@ -53,15 +65,15 @@ onMounted(getData);
 			<el-icon v-if="sidebar.collapse"><Expand /></el-icon>
 			<el-icon v-else><Fold /></el-icon>
 		</div>
-		<div class="logo">test</div>
+		<div class="logo">관리</div>
 		<div class="header-right">
 			
       
     
 			<div class="header-user-con">
-				<div class="web-select">
-				<el-select v-model="form.region" placeholder="" size="small">
-			<el-option label="all" value="all" />
+				<div class="web-select" v-permiss="16">
+				<el-select v-model="form.region" placeholder="" @change="handleWeb(form.region)">
+			<el-option label="all" value="0" />
         <el-option v-for="a in weblest" :label="a.name" :value="a.id" :key="a.id"/>
       </el-select>
 	</div>
@@ -69,7 +81,7 @@ onMounted(getData);
 				<div class="btn-bell" @click="router.push('/tabs')">
 					<el-tooltip
 						effect="dark"
-						:content="message ? `有${message}条未读消息` : `消息中心`"
+						:content="message ? `읽지 않은 메시지 ${message}개` : `메시지 센터`"
 						placement="bottom"
 					>
 						<i class="el-icon-lx-notice"></i>
@@ -88,8 +100,8 @@ onMounted(getData);
 					</span>
 					<template #dropdown>
 						<el-dropdown-menu>
-							<el-dropdown-item command="user">个人中心</el-dropdown-item>
-							<el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
+							<el-dropdown-item command="user">개인 센터</el-dropdown-item>
+							<el-dropdown-item divided command="loginout">로그인 종료</el-dropdown-item>
 						</el-dropdown-menu>
 					</template>
 				</el-dropdown>

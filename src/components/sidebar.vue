@@ -3,144 +3,21 @@ import { computed, onMounted, ref } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useRoute } from 'vue-router';
 
-const items = [
-    {
-        icon: 'Odometer',
-        index: '/dashboard',
-        title: '系统首页',
-        permiss: '1',
-    },
-    {
-        icon: 'Calendar',
-        index: '5',
-        title: '管理员相关',
-        permiss: '1',
-        subs: [
-            {
-                index: '/adminuser',
-                title: '管理员信息',
-                permiss: '1',
-            },
-            {
-                index: '/adminuser',
-                title: '角色组信息',
-                permiss: '1',
-            },
-            {
-                index: '/adminuser',
-                title: '管理员日志',
-                permiss: '1',
-            },
-        ],
-    },
-    {
-        icon: 'Calendar',
-        index: '2',
-        title: '会员相关',
-        permiss: '1',
-        subs: [
-            {
-                index: '/users',
-                title: '会员信息',
-                permiss: '1',
-            },
-            {
-                index: '/users',
-                title: '会员分组管理',
-                permiss: '1',
-            },
-            {
-                index: '/MoneyLog',
-                title: '会员余额管理',
-                permiss: '1',
-            },
-            {
-                index: '/ScoreLog',
-                title: '会员积分管理',
-                permiss: '1',
-            },
-        ],
-    },
-    {
-        icon: 'Calendar',
-        index: '7',
-        title: '运营管理',
-        permiss: '1',
-        subs: [
-            {
-                index: '/adminuser',
-                title: '系统配置',
-                permiss: '1',
-            },
-            {
-                index: '/web',
-                title: '网站配置',
-                permiss: '16',
-            },
-        ],
-    },
-    {
-        icon: 'DocumentCopy',
-        index: '/tabs',
-        title: 'tab选项卡',
-        permiss: '3',
-    },
-    {
-        icon: 'Edit',
-        index: '3',
-        title: '表单相关',
-        permiss: '4',
-        subs: [
-            {
-                index: '/form',
-                title: '基本表单',
-                permiss: '5',
-            },
-            {
-                index: '/upload',
-                title: '文件上传',
-                permiss: '6',
-            },
-            {
-                index: '4',
-                title: '三级菜单',
-                permiss: '7',
-                subs: [
-                    {
-                        index: '/editor',
-                        title: '富文本编辑器',
-                        permiss: '8',
-                    },
-                    {
-                        index: '/markdown',
-                        title: 'markdown编辑器',
-                        permiss: '9',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        icon: 'PieChart',
-        index: '/charts',
-        title: 'schart图表',
-        permiss: '11',
-    },
-    {
-        icon: 'Warning',
-        index: '/permission',
-        title: '权限管理',
-        permiss: '13',
-    },
+
+const sidebarStore = useSidebarStore();
+
+const items = ref<any[]>([]);
+onMounted(async () => {
+    await  sidebarStore.fetchItems();
     
-];
+     items.value =sidebarStore.items; 
+});
 
 const route = useRoute();
 const onRoutes = computed(() => {
     return route.path;
 });
 
-const sidebar = useSidebarStore();
 
 
 
@@ -151,7 +28,7 @@ const sidebar = useSidebarStore();
         <el-menu
             class="sidebar-el-menu"
             :default-active="onRoutes"
-            :collapse="sidebar.collapse"
+            :collapse="sidebarStore.collapse"
             background-color="#324157"
             text-color="#bfcbd9"
             active-text-color="#20a0ff"
@@ -160,7 +37,7 @@ const sidebar = useSidebarStore();
         >
             <template v-for="item in items">
                 <template v-if="item.subs">
-                    <el-sub-menu :index="item.index" :key="item.index" v-permiss="item.permiss">
+                    <el-sub-menu :index="item.index_path" :key="item.index_path" v-permiss="item.permission">
                         <template #title>
                             <el-icon>
                                 <component :is="item.icon"></component>
@@ -172,21 +49,21 @@ const sidebar = useSidebarStore();
                                 v-if="subItem.subs"
                                 :index="subItem.index"
                                 :key="subItem.index"
-                                v-permiss="item.permiss"
+                                v-permiss="item.permission"
                             >
                                 <template #title>{{ subItem.title }}</template>
-                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">
+                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index_path">
                                     {{ threeItem.title }}
                                 </el-menu-item>
                             </el-sub-menu>
-                            <el-menu-item v-else :index="subItem.index" v-permiss="item.permiss">
+                            <el-menu-item v-else :index="subItem.index_path" v-permiss="item.permission">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </template>
                     </el-sub-menu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index" v-permiss="item.permiss">
+                    <el-menu-item :index="item.index_path" :key="item.index_path" v-permiss="item.permission">
                         <el-icon>
                             <component :is="item.icon"></component>
                         </el-icon>

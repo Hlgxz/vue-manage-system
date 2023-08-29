@@ -3,7 +3,24 @@ import request from '../utils/http';
 
 export const fetchData = () => {
     return request({
-        url: '/adminuser',
+        url: '/AdminUser',
         method: 'get'
+    });
+};
+
+export const rolesData = () => {
+    return request({
+        url: '/AdminUser/roles',
+        method: 'get'
+    });
+};
+
+export const logData = (page:number | string) => {
+    return request({
+        url: '/AdminUser/getlogs',
+        method: 'get',
+        params: {
+            page
+        }
     });
 };

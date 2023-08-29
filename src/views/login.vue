@@ -8,7 +8,7 @@ import type { FormInstance, FormRules } from 'element-plus';
 import { Lock, User } from '@element-plus/icons-vue';
 import { loginAPI } from '../api/login';
 import { useAdminStore } from "../store/admin";
-
+import{ useMainStore } from '../store/webselect';
 
 //准备表单对象
 interface LoginInfo {
@@ -27,11 +27,11 @@ const rules: FormRules = {
 	username: [
 		{
 			required: true,
-			message: '请输入用户名',
+			message: '사용자 이름을 입력하십시오.',
 			trigger: 'blur'
 		}
 	],
-	password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+	password: [{ required: true, message: '암호를 입력하십시오.', trigger: 'blur' }]
 };
 const permiss = usePermissStore();
 //获取form实例做统一校验
@@ -39,27 +39,40 @@ const login = ref<FormInstance>();
 
 const submitForm = (formEl: FormInstance | undefined) => {
 	if (!formEl) return;
-	formEl.validate(async(valid: boolean) => {
+	formEl.validate(async (valid: boolean) => {
 		if (valid) {
 			const res = await loginAPI(param)
+			const adminStore = useAdminStore();
 			
-			if(res.data.code == 200){
-			
-			//跳转首页
-			ElMessage.success(res.data.msg);
-			localStorage.token = res.data.data.token;
-			localStorage.setItem('ms_username', param.username);
-			const keys = permiss.defaultList[param.username == 'admin' ? 'admin' : 'user'];
-			permiss.handleSet(keys);
-			localStorage.setItem('ms_keys', JSON.stringify(keys));
-			router.push('/');
-		}else{
-			ElMessage.error(res.data.msg);
-		}	
-		//提示用户
-		
+			if (res.data.code == 200) {
+				//将token加入本地存储中
+				localStorage.token =await res.data.data.token;
+				//获取管理员分组
+				await permiss.getrolesData();
+				//保存管理员信息
+				adminStore.setUserData(res.data.data);
+				if (res.data.data.role_id != 999){
+					const store = useMainStore();
+					store.setActiveWebRoleId(res.data.data.role_id)
+				}
+
+					ElMessage.success(res.data.msg);
+				
+				const keys = permiss.defaultList[res.data.data.roles_id];
+
+
+				permiss.handleSet(keys);
+				localStorage.setItem('ms_keys', JSON.stringify(keys));
+
+				//跳转首页，如有跳转问题查看导航守卫
+				router.push('/');
+			} else {
+				ElMessage.error(res.data.msg);
+			}
+			//提示用户
+
 		} else {
-			ElMessage.error('登录失败');
+			ElMessage.error('로그인 실패');
 			return false;
 		}
 	});
@@ -82,12 +95,7 @@ tags.clearTags();
 					</el-input>
 				</el-form-item>
 				<el-form-item prop="password">
-					<el-input
-						type="password"
-						placeholder="password"
-						v-model="param.password"
-						@keyup.enter="submitForm(login)"
-					>
+					<el-input type="password" placeholder="password" v-model="param.password" @keyup.enter="submitForm(login)">
 						<template #prepend>
 							<el-button :icon="Lock"></el-button>
 						</template>
@@ -96,7 +104,7 @@ tags.clearTags();
 				<div class="login-btn">
 					<el-button type="primary" @click="submitForm(login)">登录</el-button>
 				</div>
-				
+
 			</el-form>
 		</div>
 	</div>
@@ -109,9 +117,10 @@ tags.clearTags();
 	position: relative;
 	width: 100%;
 	height: 100%;
-	
+
 	background-size: 100%;
 }
+
 .ms-title {
 	width: 100%;
 	line-height: 50px;
@@ -120,6 +129,7 @@ tags.clearTags();
 	color: #fff;
 	border-bottom: 1px solid #ddd;
 }
+
 .ms-login {
 	position: absolute;
 	left: 50%;
@@ -130,17 +140,21 @@ tags.clearTags();
 	background: rgba(255, 255, 255, 0.3);
 	overflow: hidden;
 }
+
 .ms-content {
 	padding: 30px 30px;
 }
+
 .login-btn {
 	text-align: center;
 }
+
 .login-btn button {
 	width: 100%;
 	height: 36px;
 	margin-bottom: 10px;
 }
+
 .login-tips {
 	font-size: 12px;
 	line-height: 30px;

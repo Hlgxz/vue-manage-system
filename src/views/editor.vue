@@ -30,7 +30,7 @@ onBeforeUnmount(() => {
 });
 const syncHTML = () => {
 	content.html = instance.txt.html();
-	console.log(content.html);
+	
 };
 </script>
 

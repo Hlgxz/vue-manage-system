@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref , watch} from 'vue';
 import { fetchData,MoneyData,GetUser,MoneySave } from '../api/user';
 import { Plus } from '@element-plus/icons-vue';
 
 //定义table数据
 const tableData = ref();
-const pageTotal = ref(0);
-
+const currentPage = ref(1);
+const total = ref(0);
 // 获取table数据
 const getData = () => {
-	MoneyData().then(res => {
-		tableData.value = res.data.data.data;
+	MoneyData(currentPage.value).then(res => {
+		tableData.value = res.data.data.data
+      total.value =res.data.data.total
 	});
 };
 
@@ -19,6 +20,9 @@ const getData = () => {
 onMounted(() => {
 	getData();
 });
+const current =() =>{
+   getData();
+}
 
 //新增弹出框
 const idvalue = ref();
@@ -39,31 +43,32 @@ const change = ref(
 
 const selectedId = ref<string>('');
 const money = ref<number>(0);
-const endmoney = ref(change.value.money + money.value);
+const endmoney = ref<number>(0);
 const memo =ref('');
 //查找对应id函数
 const findId = () => {
    GetUser(selectedId.value).then(res => {
       
       change.value = res.data.data;
-      console.log(change.value);
       
+      endmoney.value = (change.value.money + money.value);
    })
 }
+// 当 money 的值改变时，自动更新 endmoney 的值
+watch(money, (newMoney) => {
+    endmoney.value = (Number(change.value.money) +Number(newMoney));
+});
 const editVisible = ref(false);
 const handleNew = () => {
    fetchData().then(res => {
-      
 		 idvalue.value = res.data.data.data;
-       
 	});
-   
 	 editVisible.value = true;
 };
 const saveEdit = () => {
 
    MoneySave({user_id:selectedId.value ,money:money.value,memo:memo.value}).then(res => {
-      
+      console.log(res.data);
       getData();
    })
 
@@ -88,9 +93,15 @@ const saveEdit = () => {
     <el-table-column prop="memo" label="备注" />
     <el-table-column prop="create_time" label="创建时间" />
   </el-table>
-
+  <div class="pagination">
+  <el-pagination background layout="prev, pager, next"
+   :total="total" 
+   v-model:current-page="currentPage"
+   @current-change="current"
+   />
+   </div>
   
-		<!-- 编辑弹出框 -->
+		<!--弹出框 -->
 		<el-dialog title="新增交易" v-model="editVisible" width="30%">
 			<el-form label-width="90px">
             <el-form-item label="用户名">

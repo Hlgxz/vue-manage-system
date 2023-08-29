@@ -8,7 +8,7 @@ const pageTotal = ref(0);
 // 获取table数据
 const getData = () => {
 	ScoreData().then(res => {
-      console.log(res.data);
+      
       
 		tableData.value = res.data.data.data;
 		pageTotal.value = res.data.data.current_page || 50;

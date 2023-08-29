@@ -2,18 +2,24 @@
 import request from '../utils/http';
 
 //分页获取所有数据
-export const fetchData = () => {
+export const fetchData = (page: number | string) => {
     return request({
-        url: '/user',
-        method: 'get'
+        url: '/User',
+        method: 'get',
+        params:{
+         page
+        }
     });
 };
 
 //分页获取所有交易数据
-export const MoneyData = () => {
+export const MoneyData = (page:number | string) => {
    return request({
        url: '/user/moneylog',
-       method: 'get'
+       method: 'get',
+       params:{
+         page
+       }
    });
 };
 //分页获取所有积分数据
@@ -39,6 +45,7 @@ interface LoginPayload {
    birthday?: Date,
    motto?: string,
    status?: string,
+   referral_code?:string,
  }
 
 
@@ -80,3 +87,19 @@ export const MoneySave = ({user_id,money,memo}:MoneyPayload) =>{
        }
    })
 }
+
+//用户推荐人关系查询
+export const Referrs = () => {
+   return request({
+       url: '/User/referrer',
+       method: 'get'
+   });
+};
+
+//查询用户数量
+export const count = () => {
+   return request({
+       url: '/User/count',
+       method: 'get'
+   });
+};

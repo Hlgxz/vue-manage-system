@@ -1,7 +1,7 @@
 <script setup lang="ts" name="basetable">
 import { ref, reactive } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Delete, Edit, Search, Plus } from '@element-plus/icons-vue';
+import { Search, Plus } from '@element-plus/icons-vue';
 import { fetchData } from '../api/adminuser';
 
 interface TableItem {
@@ -23,8 +23,6 @@ const pageTotal = ref(0);
 // 获取表格数据
 const getData = () => {
 	fetchData().then(res => {
-      console.log(res.data.data);
-      
 		tableData.value = res.data.data.data;
 		pageTotal.value = res.data.data.current_page || 50;
 	});
@@ -80,42 +78,23 @@ const saveEdit = () => {
 		<div class="container">
 			<div class="handle-box">
 				
-				<el-input v-model="query.username" placeholder="用户名" class="handle-input mr10"></el-input>
-				<el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
-				<el-button type="primary" :icon="Plus">新增</el-button>
+				<el-input v-model="query.username" placeholder="사용자 이름" class="handle-input mr10"></el-input>
+				<el-button type="primary" :icon="Search" @click="handleSearch">검색</el-button>
+				<el-button type="primary" :icon="Plus">신규</el-button>
 			</div>
 			<el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
 				<el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-				<el-table-column prop="username" label="用户名"></el-table-column>
-				<el-table-column prop="role_id" label="权限"></el-table-column>
-				<el-table-column prop="mobile" label="手机"></el-table-column>
-				<el-table-column prop="email" label="邮箱"></el-table-column>
-				<el-table-column label="状态" align="center">
-					<template #default="scope">
-						<el-tag
-							:type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''"
-						>
-							{{ scope.row.state }}
-						</el-tag>
-					</template>
-				</el-table-column>
+				<el-table-column prop="username" label="사용자 이름"></el-table-column>
+				<el-table-column prop="role_id" label="권한 사이트"></el-table-column>
+				<el-table-column prop="mobile" label="핸드폰"></el-table-column>
+				<el-table-column prop="email" label="메일박스"></el-table-column>
+				<el-table-column prop="created_at" label="등록 시간"></el-table-column>
 
-				<el-table-column prop="created_at" label="注册时间"></el-table-column>
-				<el-table-column label="操作" width="220" align="center">
-					<template #default="scope">
-						<el-button text :icon="Edit" @click="handleEdit(scope.$index, scope.row)" v-permiss="15">
-							编辑
-						</el-button>
-						<el-button text :icon="Delete" class="red" @click="handleDelete(scope.$index)" v-permiss="16">
-							删除
-						</el-button>
-					</template>
-				</el-table-column>
 			</el-table>
 			<div class="pagination">
 				<el-pagination
 					background
-					layout="total, prev, pager, next"
+					layout="prev, pager, next"
 					:current-page="query.pageIndex"
 					:page-size="query.pageSize"
 					:total="pageTotal"
@@ -124,23 +103,6 @@ const saveEdit = () => {
 			</div>
 		</div>
 
-		<!-- 编辑弹出框 -->
-		<el-dialog title="编辑" v-model="editVisible" width="30%">
-			<el-form label-width="70px">
-				<el-form-item label="用户名">
-					<el-input v-model="form.username"></el-input>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input v-model="form.address"></el-input>
-				</el-form-item>
-			</el-form>
-			<template #footer>
-				<span class="dialog-footer">
-					<el-button @click="editVisible = false">取 消</el-button>
-					<el-button type="primary" @click="saveEdit">确 定</el-button>
-				</span>
-			</template>
-		</el-dialog>
 	</div>
 </template>
 

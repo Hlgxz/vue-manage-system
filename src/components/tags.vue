@@ -78,16 +78,16 @@ const handleTags = (command: string) => {
 		</ul>
 		<div class="tags-close-box">
 			<el-dropdown @command="handleTags">
-				<el-button size="small" type="primary">
-					标签选项
+				<el-button  type="primary">
+					태그 옵션
 					<el-icon class="el-icon--right">
 						<arrow-down />
 					</el-icon>
 				</el-button>
 				<template #dropdown>
 					<el-dropdown-menu size="small">
-						<el-dropdown-item command="other">关闭其他</el-dropdown-item>
-						<el-dropdown-item command="all">关闭所有</el-dropdown-item>
+						<el-dropdown-item command="other">기타 닫기</el-dropdown-item>
+						<el-dropdown-item command="all">모두 닫기</el-dropdown-item>
 					</el-dropdown-menu>
 				</template>
 			</el-dropdown>
@@ -156,13 +156,13 @@ const handleTags = (command: string) => {
 
 .tags-close-box {
 	position: absolute;
-	right: 0;
+	right: 20px;
 	top: 0;
 	box-sizing: border-box;
 	padding-top: 1px;
 	text-align: center;
 	width: 110px;
-	height: 30px;
+	height: 35px;
 	background: #fff;
 	box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
 	z-index: 10;

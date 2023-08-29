@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/dashboard',
                 name: 'dashboard',
                 meta: {
-                    title: '系统首页',
+                    title: '홈 페이지',
                     permiss: '1',
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
@@ -25,26 +25,53 @@ const routes: RouteRecordRaw[] = [
                 path: '/adminuser',
                 name: 'adminuser',
                 meta: {
-                    title: '管理员设置',
-                    permiss: '6',
+                    title: '관리자 설정',
+                    permiss: '16',
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/AdminUsers.vue'),
+            },
+            {
+                path: '/roles',
+                name: 'roles',
+                meta: {
+                    title: '관리자 그룹',
+                    permiss: '16',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/roles.vue'),
+            },
+            {
+                path: '/AdminLogs',
+                name: 'adminLogs',
+                meta: {
+                    title: '관리자 로그',
+                    permiss: '16',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/AdminLogs.vue'),
             },
             {
                 path: '/Users',
                 name: 'Users',
                 meta: {
-                    title: '会员设置',
-                    permiss: '6',
+                    title: '회원 설정',
+                    permiss: '1',
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/Users.vue'),
+            },
+            {
+                path: '/referr',
+                name: 'referr',
+                meta: {
+                    title: '추천인 관계도',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/referr.vue'),
             },
             {
                 path: '/MoneyLog',
                 name: 'MoneyLog',
                 meta: {
-                    title: '会员余额',
-                    permiss: '6',
+                    title: '회원 잔액',
+                    permiss: '1',
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/MoneyLog.vue'),
             },
@@ -52,19 +79,46 @@ const routes: RouteRecordRaw[] = [
                 path: '/ScoreLog',
                 name: 'ScoreLog',
                 meta: {
-                    title: '会员积分',
-                    permiss: '6',
+                    title: '회원 포인트',
+                    permiss: '1',
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/ScoreLog.vue'),
+            },
+            {
+                path: '/level',
+                name: 'level',
+                meta: {
+                    title: '등급 관리',
+                    permiss: '6',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/level.vue'),
+            },
+            {
+                path: '/system',
+                name: 'system',
+                meta: {
+                    title: '시스템 구성',
+                    permiss: '16',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/system.vue'),
             },
             {
                 path: '/web',
                 name: 'web',
                 meta: {
-                    title: '网站配置',
+                    title: '사이트 구성',
                     permiss: '16',
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/web.vue'),
+            },
+            {
+                path: '/pzsdb',
+                name: 'pzsdb',
+                meta: {
+                    title: '메뉴 구성',
+                    permiss: '16',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/pzsdb.vue'),
             },
             
             {
@@ -94,15 +148,7 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "tabs" */ '../views/tabs.vue'),
             },
-            {
-                path: '/permission',
-                name: 'permission',
-                meta: {
-                    title: '权限管理',
-                    permiss: '13',
-                },
-                component: () => import(/* webpackChunkName: "permission" */ '../views/permission.vue'),
-            },
+            
             {
                 path: '/upload',
                 name: 'upload',
@@ -177,7 +223,7 @@ const router = createRouter({
 //导航守卫
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | vue-manage-system`;
-    const role = localStorage.getItem('ms_username');
+    const role = localStorage.getItem('token');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {
         next('/login');
