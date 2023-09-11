@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
                     title: '홈 페이지',
                     permiss: '1',
                 },
-                component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/Users.vue'),
             },
             {
                 path: '/adminuser',
@@ -120,80 +120,64 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/pzsdb.vue'),
             },
-            
             {
-                path: '/charts',
-                name: 'basecharts',
+                path: '/game_info',
+                name: 'game_info',
                 meta: {
-                    title: '图表',
-                    permiss: '11',
+                    title: '게임결과',
+                    permiss: '1',
                 },
-                component: () => import(/* webpackChunkName: "charts" */ '../views/charts.vue'),
-            },
-            {
-                path: '/form',
-                name: 'baseform',
-                meta: {
-                    title: '表单',
-                    permiss: '5',
-                },
-                component: () => import(/* webpackChunkName: "form" */ '../views/form.vue'),
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/game_info.vue'),
             },
             {
                 path: '/tabs',
                 name: 'tabs',
                 meta: {
-                    title: 'tab标签',
+                    title: '회원 메시지',
                     permiss: '3',
                 },
                 component: () => import(/* webpackChunkName: "tabs" */ '../views/tabs.vue'),
             },
-            
             {
-                path: '/upload',
-                name: 'upload',
+                path: '/deposit',
+                name: 'deposit',
                 meta: {
-                    title: '上传插件',
-                    permiss: '6',
+                    title: '충전/환전',
+                    permiss: '3',
                 },
-                component: () => import(/* webpackChunkName: "upload" */ '../views/upload.vue'),
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/deposit.vue'),
             },
             
             {
-                path: '/user',
-                name: 'user',
+                path: '/notice',
+                name: 'notice',
                 meta: {
-                    title: '个人中心',
+                    title: '公告管理',
+                    permiss: '3',
                 },
-                component: () => import(/* webpackChunkName: "user" */ '../views/user.vue'),
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/notice.vue'),
             },
             {
-                path: '/editor',
-                name: 'editor',
+                path: '/LobbyList',
+                name: 'LobbyList',
                 meta: {
-                    title: '富文本编辑器',
-                    permiss: '8',
+                    title: 'LobbyList',
+                    permiss: '3',
                 },
-                component: () => import(/* webpackChunkName: "editor" */ '../views/editor.vue'),
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/LobbyList.vue'),
             },
             {
-                path: '/markdown',
-                name: 'markdown',
+                path: '/integrated',
+                name: 'integrated',
                 meta: {
-                    title: 'markdown编辑器',
-                    permiss: '9',
+                    title: 'integrated',
+                    permiss: '3',
                 },
-                component: () => import(/* webpackChunkName: "markdown" */ '../views/markdown.vue'),
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/integrated.vue'),
             },
-            {
-                path: '/export',
-                name: 'export',
-                meta: {
-                    title: '导出Excel',
-                    permiss: '2',
-                },
-                component: () => import(/* webpackChunkName: "export" */ '../views/export.vue'),
-            },
+            
+            
+            
             
         ],
     },
@@ -201,7 +185,7 @@ const routes: RouteRecordRaw[] = [
         path: '/login',
         name: 'Login',
         meta: {
-            title: '登录',
+            title: 'Login',
         },
         component: () => import(/* webpackChunkName: "login" */ '../views/login.vue'),
     },
@@ -213,6 +197,7 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import(/* webpackChunkName: "403" */ '../views/403.vue'),
     },
+    
 ];
 
 const router = createRouter({

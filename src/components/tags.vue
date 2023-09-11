@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useTagsStore } from '../store/tags';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
-
+import vNumber from '../components/number.vue';
+import { useMainStore } from '../store/webselect'
+ const main = useMainStore();
 const route = useRoute();
 const router = useRouter();
 const isActive = (path: string) => {
@@ -75,7 +77,9 @@ const handleTags = (command: string) => {
 				<router-link :to="item.path" class="tags-li-title">{{ item.title }}</router-link>
 				<el-icon @click="closeTags(index)"><Close /></el-icon>
 			</li>
+			<v-number v-if="main.number"/>
 		</ul>
+		
 		<div class="tags-close-box">
 			<el-dropdown @command="handleTags">
 				<el-button  type="primary">

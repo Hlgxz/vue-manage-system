@@ -12,6 +12,8 @@ const getData = () => {
 	MoneyData(currentPage.value).then(res => {
 		tableData.value = res.data.data.data
       total.value =res.data.data.total
+      console.log(res.data.data.data);
+      
 	});
 };
 
@@ -82,16 +84,33 @@ const saveEdit = () => {
 <template>
 <div class="container">
    <div class="handle-box">
-      <el-button type="primary" :icon="Plus" @click="handleNew()">新增</el-button>
+      <el-button type="primary" :icon="Plus" @click="handleNew()">신규 거래</el-button>
    </div>
   <el-table :data="tableData" style="width: 100%">
     <el-table-column prop="id" label="id" width="180" />
-    <el-table-column prop="user.username" label="用户名" width="180" />
-    <el-table-column prop="money" label="金额" />
-    <el-table-column prop="before" label="交易之前余额" />
-    <el-table-column prop="after" label="当前余额" />
-    <el-table-column prop="memo" label="备注" />
-    <el-table-column prop="create_time" label="创建时间" />
+    <el-table-column prop="user_name" label="사용자 이름" width="180" />
+    
+    <el-table-column prop="amount" label="거래 금액" />
+    <el-table-column prop="before" label="거래 이전 금액" />
+    <el-table-column  label="거래 후 잔액">
+      <template #default="scope">
+         {{ scope.row.amount +scope.row.before }}
+      </template>
+    </el-table-column>
+    <el-table-column prop="type" label="type" />
+    
+    <el-table-column  label="external">
+      <template #default="scope">
+         {{ scope.row.external?.detail.data.gameType }}
+         <br/>
+         {{ scope.row.external?.detail.data.result.banker.cards }}
+         {{ scope.row.external?.detail.data.result.banker.score }}
+         <br/>
+         {{ scope.row.external?.detail.data.result.player.cards }}
+         {{ scope.row.external?.detail.data.result.player.score }}
+      </template>
+    </el-table-column>
+    <el-table-column prop="created_at" label="생성 시간" />
   </el-table>
   <div class="pagination">
   <el-pagination background layout="prev, pager, next"

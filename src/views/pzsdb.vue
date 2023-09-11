@@ -59,16 +59,7 @@ const getPremission = () => {
 };
 getPremission();
 
-// 保存权限
-const tree = ref<InstanceType<typeof ElTree>>();
-const onSubmit = () => {
-	// 获取选中的权限
-	
-};
 
-const handleChange = (val: string[]) => {
-	tree.value!.setCheckedKeys(permiss.defaultList[role.value]);
-};
 </script>
 
 <template>

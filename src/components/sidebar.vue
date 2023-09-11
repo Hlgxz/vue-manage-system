@@ -9,7 +9,6 @@ const sidebarStore = useSidebarStore();
 const items = ref<any[]>([]);
 onMounted(async () => {
     await  sidebarStore.fetchItems();
-    
      items.value =sidebarStore.items; 
 });
 
@@ -32,16 +31,16 @@ const onRoutes = computed(() => {
             background-color="#324157"
             text-color="#bfcbd9"
             active-text-color="#20a0ff"
-            unique-opened
             router
+            unique-opened
+            
         >
             <template v-for="item in items">
                 <template v-if="item.subs">
                     <el-sub-menu :index="item.index_path" :key="item.index_path" v-permiss="item.permission">
                         <template #title>
-                            <el-icon>
-                                <component :is="item.icon"></component>
-                            </el-icon>
+                            
+                            <img :src="`src/assets/img/free_icon/${item.img_src}.png`" alt="" width="25" height="25">
                             <span>{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
@@ -64,9 +63,7 @@ const onRoutes = computed(() => {
                 </template>
                 <template v-else>
                     <el-menu-item :index="item.index_path" :key="item.index_path" v-permiss="item.permission">
-                        <el-icon>
-                            <component :is="item.icon"></component>
-                        </el-icon>
+                        <img :src="`src/assets/img/free_icon/${item.img_src}.png`" alt="" width="25" height="25">
                         <template #title>{{ item.title }}</template>
                     </el-menu-item>
                 </template>

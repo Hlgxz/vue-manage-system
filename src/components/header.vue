@@ -6,9 +6,17 @@ import imgurl from '../assets/img/img.jpg';
 import { getSitesData } from '../api/sites';
 import { useMainStore } from '../store/webselect';
 import { useTagsStore } from '../store/tags';
-
+import { getwdMessage } from "../api/usermessage";
 const username: string | null = localStorage.getItem('ms_username');
-const message: number = 2;
+//未读信息查询
+const message: any = ref(null);
+const wdMessage = ()=>{
+	getwdMessage().then(res=>{
+		message.value = res.data
+		
+		
+	})
+}
 const form = ref({
   region: '',
 })
@@ -22,6 +30,8 @@ onMounted(() => {
 	if (document.body.clientWidth < 1500) {
 		collapseChage();
 	}
+
+	wdMessage();
 });
 
 // 用户名下拉菜单选择事件
@@ -56,6 +66,7 @@ const handleWeb = (command: string) => {
 	store.setActiveWebRoleId(command);
 	tags.clearTags();
 	router.push('/');
+	location.reload();
 };
 </script>
 <template>
@@ -65,32 +76,21 @@ const handleWeb = (command: string) => {
 			<el-icon v-if="sidebar.collapse"><Expand /></el-icon>
 			<el-icon v-else><Fold /></el-icon>
 		</div>
-		<div class="logo">관리</div>
+		<div class="logo"><div class="web-select" v-permiss="16">
+				<el-select v-model="form.region" placeholder="" @change="handleWeb(form.region)">
+			<el-option label="all" value="0" />
+        <el-option v-for="a in weblest" :label="a.name" :value="a.id" :key="a.id"/>
+      </el-select>
+	</div></div>
 		<div class="header-right">
 			
       
     
 			<div class="header-user-con">
-				<div class="web-select" v-permiss="16">
-				<el-select v-model="form.region" placeholder="" @change="handleWeb(form.region)">
-			<el-option label="all" value="0" />
-        <el-option v-for="a in weblest" :label="a.name" :value="a.id" :key="a.id"/>
-      </el-select>
-	</div>
-				<!-- 消息中心 -->
-				<div class="btn-bell" @click="router.push('/tabs')">
-					<el-tooltip
-						effect="dark"
-						:content="message ? `읽지 않은 메시지 ${message}개` : `메시지 센터`"
-						placement="bottom"
-					>
-						<i class="el-icon-lx-notice"></i>
-					</el-tooltip>
-					<span class="btn-bell-badge" v-if="message"></span>
-				</div>
-				<!-- 用户头像 -->
-				<el-avatar class="user-avator" :size="30" :src="imgurl" />
-				<!-- 用户名下拉菜单 -->
+				
+				
+				
+				
 				<el-dropdown class="user-name" trigger="click" @command="handleCommand">
 					<span class="el-dropdown-link">
 						{{ username }}
@@ -100,8 +100,7 @@ const handleWeb = (command: string) => {
 					</span>
 					<template #dropdown>
 						<el-dropdown-menu>
-							<el-dropdown-item command="user">개인 센터</el-dropdown-item>
-							<el-dropdown-item divided command="loginout">로그인 종료</el-dropdown-item>
+							<el-dropdown-item divided command="loginout">로그 아웃</el-dropdown-item>
 						</el-dropdown-menu>
 					</template>
 				</el-dropdown>
@@ -132,6 +131,10 @@ const handleWeb = (command: string) => {
 	float: left;
 	width: 250px;
 	line-height: 60px;
+	
+}
+.header .logo a{
+	color: #fff;
 }
 .header-right {
 	float: right;
@@ -187,6 +190,6 @@ const handleWeb = (command: string) => {
 	text-align: center;
 }
 .web-select{
-	width: 100px;
+	width: 150px;
 }
 </style>

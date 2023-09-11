@@ -23,7 +23,7 @@ export const usePermissStore = defineStore('permiss', {
 			if (response.data.data) {
 				console.log(response.data.data);
 				
-				response.data.data.forEach(item => {
+				response.data.data.forEach((item:any) => {
 					// 将 roles 字符串转换为数组
 					const rolesArray = item.roles.split(",");
 					// 使用 name 字段作为键来存储转换后的数据

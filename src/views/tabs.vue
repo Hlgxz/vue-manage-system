@@ -1,110 +1,114 @@
+<script setup lang="ts" name="tabs">
+import { onMounted, ref } from 'vue';
+import { getMessages,getMessage } from "../api/usermessage";
+const message = ref('first');
+
+interface Message {
+	
+  id: number;
+  user_id:number;
+  user_name:string;
+  title: string;
+  content: string;
+  status: 1 | 0;
+  created_at: string;
+}
+const state = ref({
+	unread: [],
+	read: []
+});
+const getMessagess = () =>{
+	getMessages().then(res=>{
+		const messages =res.data.data;
+		console.log(res.data.data);
+		// 过滤未读和已读消息
+      state.value.unread = messages.filter((message:Message) => message.status === 1).map((message:Message) => ({
+        date: message.created_at,
+        title: message.title,
+		  user_name:message.user_name,
+		  id:message.id
+      }));
+      
+      state.value.read = messages.filter((message:Message) => message.status === 0).map((message:Message) => ({
+        date: message.created_at,
+        title: message.title,
+		  user_name:message.user_name,
+		  id:message.id
+      }));
+		
+	});
+}
+
+onMounted(getMessagess);
+const dialog =ref({
+	dialogtf:false,
+	dialogtftitle:"",
+	dialogtfcontent:"",
+
+});
+
+const handleRowClick = (row:any)=>{
+	getMessage(row.id).then(res=>{
+		dialog.value.dialogtftitle =res.data.data.title;
+		dialog.value.dialogtfcontent =res.data.data.content;
+	})
+	dialog.value.dialogtf = true;
+	
+}
+
+</script>
+
 <template>
 	<div class="container">
 		<el-tabs v-model="message">
-			<el-tab-pane :label="`未读消息(${state.unread.length})`" name="first">
-				<el-table :data="state.unread" :show-header="false" style="width: 100%">
-					<el-table-column>
+			<el-tab-pane :label="`읽지 않은 메시지(${state.unread.length})`" name="first">
+				<el-table :data="state.unread" :show-header="false" style="width: 100%" @row-click="handleRowClick">
+					<el-table-column width="180" >
+						<template #default="scope">
+							<span >{{ scope.row.user_name }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column width="480">
 						<template #default="scope">
 							<span class="message-title">{{ scope.row.title }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="date" width="180"></el-table-column>
-					<el-table-column width="120">
+					
+				</el-table>
+				
+			</el-tab-pane>
+			<el-tab-pane :label="`읽은 메시지(${state.read.length})`" name="second">
+				<template v-if="message === 'second'">
+					<el-table :data="state.read" :show-header="false" style="width: 100%" @row-click="handleRowClick">
+						<el-table-column width="180" >
 						<template #default="scope">
-							<el-button size="small" @click="handleRead(scope.$index)">标为已读</el-button>
+							<span >{{ scope.row.user_name }}</span>
 						</template>
 					</el-table-column>
-				</el-table>
-				<div class="handle-row">
-					<el-button type="primary">全部标为已读</el-button>
-				</div>
-			</el-tab-pane>
-			<el-tab-pane :label="`已读消息(${state.read.length})`" name="second">
-				<template v-if="message === 'second'">
-					<el-table :data="state.read" :show-header="false" style="width: 100%">
-						<el-table-column>
-							<template #default="scope">
-								<span class="message-title">{{ scope.row.title }}</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="date" width="150"></el-table-column>
-						<el-table-column width="120">
-							<template #default="scope">
-								<el-button type="danger" @click="handleDel(scope.$index)">删除</el-button>
-							</template>
-						</el-table-column>
+					<el-table-column width="480">
+						<template #default="scope">
+							<span class="message-title">{{ scope.row.title }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="date" width="180"></el-table-column>
+						
 					</el-table>
-					<div class="handle-row">
-						<el-button type="danger">删除全部</el-button>
-					</div>
+					
 				</template>
 			</el-tab-pane>
-			<el-tab-pane :label="`回收站(${state.recycle.length})`" name="third">
-				<template v-if="message === 'third'">
-					<el-table :data="state.recycle" :show-header="false" style="width: 100%">
-						<el-table-column>
-							<template #default="scope">
-								<span class="message-title">{{ scope.row.title }}</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="date" width="150"></el-table-column>
-						<el-table-column width="120">
-							<template #default="scope">
-								<el-button @click="handleRestore(scope.$index)">还原</el-button>
-							</template>
-						</el-table-column>
-					</el-table>
-					<div class="handle-row">
-						<el-button type="danger">清空回收站</el-button>
-					</div>
-				</template>
-			</el-tab-pane>
+			
 		</el-tabs>
+
+		<el-dialog v-model="dialog.dialogtf" :title="dialog.dialogtftitle">
+			<span>{{ dialog.dialogtfcontent }}</span>
+  		</el-dialog>
+
+
 	</div>
 </template>
 
-<script setup lang="ts" name="tabs">
-import { ref, reactive } from 'vue';
 
-const message = ref('first');
-const state = reactive({
-	unread: [
-		{
-			date: '2018-04-19 20:00:00',
-			title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-		},
-		{
-			date: '2018-04-19 21:00:00',
-			title: '今晚12点整发大红包，先到先得'
-		}
-	],
-	read: [
-		{
-			date: '2018-04-19 20:00:00',
-			title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-		}
-	],
-	recycle: [
-		{
-			date: '2018-04-19 20:00:00',
-			title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-		}
-	]
-});
-
-const handleRead = (index: number) => {
-	const item = state.unread.splice(index, 1);
-	state.read = item.concat(state.read);
-};
-const handleDel = (index: number) => {
-	const item = state.read.splice(index, 1);
-	state.recycle = item.concat(state.recycle);
-};
-const handleRestore = (index: number) => {
-	const item = state.recycle.splice(index, 1);
-	state.read = item.concat(state.read);
-};
-</script>
 
 <style>
 .message-title {

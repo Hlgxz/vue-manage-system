@@ -19,7 +19,33 @@ onMounted(() => {
 	getUserCount();
    })
 
-
+	const options1 = {
+	type: 'bar',
+	title: {
+		text: '회원 수'
+	},
+	bgColor: '#fbfbfb',
+	labels: ['web1', 'web2','web3...'],
+	datasets: [
+		{
+			label: '전체 회원수',
+			fillColor: 'rgba(241, 49, 74, 0.5)',
+			data: [8, 3]
+		},
+		{
+			label: '접속 회원수',
+			data: [0, 0]
+		},
+		{
+			label: '차단 회원수',
+			data: [0, 0]
+		},
+		{
+			label: '회원수',
+			data: [0, 0]
+		}
+	]
+};
 
 </script>
 
@@ -93,6 +119,11 @@ onMounted(() => {
 						</el-card>
 					</el-col>
 				</el-row>
+			</el-col>
+			<el-col :span="8">
+				<el-card shadow="hover" :body-style="{ padding: '0px' }">
+			<schart class="schart" canvasId="bar" :options="options1"></schart>
+		</el-card>
 			</el-col>
 		</el-row>
 		
@@ -210,6 +241,6 @@ onMounted(() => {
 
 .schart {
 	width: 100%;
-	height: 300px;
+	height: 400px;
 }
 </style>
