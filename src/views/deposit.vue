@@ -3,6 +3,7 @@ import { onMounted, watch, ref, Ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from "vue-router";
 import { depositAPI,depositokAPI,depositnoAPI,withdrawalAPI,withdrawalokAPI,countAPI,withdrawalnoAPI,qx3API } from '../api/user';
+import { postapproveRecharge } from '../api/offline';
 const route = useRoute();
 const status1Data = ref();
 const activeName= ref('1');
@@ -99,14 +100,17 @@ const nohandlewEdit = (row: any) => {
 
 const setColumnStyle1 = ({ row, column }:any) => {
   if (column.property === 'amount') {
-    return { backgroundColor: '#b8bbeb' };
+    return { backgroundColor: '#facfe6' };
   }
 };
 const setColumnStyle2 = ({ row, column }:any) => {
   if (column.property === 'amount') {
-    return { backgroundColor: '#d9ecff' };
+    return { backgroundColor: '#2af6f8' };
   }
 };
+const formatNumber =(number:any)=> {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 watch(
       () => route.query,
       (newQuery) => {
@@ -123,7 +127,16 @@ watch(
     );
 
 
-
+//线下代理通过
+const handleEdit2 = (row: any) => {
+      postapproveRecharge(row.id).then(res=>{
+       console.log(res.data.data);
+       if(res.data.code == 200){
+        ElMessage.success("작업 성공");
+       }
+       getDepositList();
+    })
+}
 </script>
 
 <template>
@@ -133,17 +146,27 @@ watch(
     
     </el-divider>
    <el-tabs v-model="activeName" class="demo-tabs" @tab-change="getDepositList()">
-    <el-tab-pane :label="`대기중(${count.total1_1})`" name="1" ></el-tab-pane>
-    <el-tab-pane :label="`완료(${count.total1_2})`" name="2"></el-tab-pane>
-    <el-tab-pane :label="`취소(${count.total1_0})`" name="0"></el-tab-pane>
+    <el-tab-pane :label="`충전신청(${count.total1_1})`" name="1" ></el-tab-pane>
+    <el-tab-pane :label="`충전완료(${count.total1_2})`" name="2"></el-tab-pane>
+    <el-tab-pane :label="`충전취소(${count.total1_0})`" name="0"></el-tab-pane>
   </el-tabs>
   <el-table :data="status1Data" style="width: 100%" border :cell-style="setColumnStyle1">
-        <el-table-column prop="id" label="No" width="80"></el-table-column>
+        <el-table-column prop="id" label="충전번호" width="100" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>충전번호</span>
+          </template>
+        </el-table-column>
         <el-table-column  label="상태" width="220" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>상태</span>
+          </template>
             <template #default="scope">
-              <span v-if="activeName == '1'">대기중</span>
-              <span v-if="activeName == '2'">승인</span>
-              <span v-if="activeName == '0'">취소</span>
+              <span v-if="activeName == '1'">충전 대기중</span>
+              <span v-if="activeName == '2'">충전 완료</span>
+              <span v-if="activeName == '0'">충전 취소</span>
+              <span  v-if="scope.row.type == '1'">
               <el-popconfirm hide-icon
               title="정말 충전 하시겠습니까?"
               @confirm="handleEdit(scope.row)"
@@ -171,25 +194,108 @@ watch(
                 <el-button size="small"   v-if="activeName == '2'">취소</el-button>
               </template>
   </el-popconfirm>
+</span>
+              <span  v-if="scope.row.type == '2'">
+                <el-popconfirm hide-icon
+              title="정말 충전 하시겠습니까?"
+              @confirm="handleEdit2(scope.row)"
+              width="200"
+              >
+    <template #reference>
+      <el-button type="primary" size="small"   v-if="activeName == '1'" color="#626aef">승인</el-button>
+    </template>
+  </el-popconfirm>
+              </span>
             </template>
         </el-table-column>
         
-        <el-table-column prop="before" label="충전전 금액" align="center"></el-table-column>
-        <el-table-column prop="amount"  label="충전금액" align="center"></el-table-column>
-        <el-table-column  label="충전후 금액" v-if="activeName == '1'" align="center">
+        <el-table-column  label="충 전전 금액" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>충전 <span style="color: #ff0000;">전</span> 금액</span>
+          </template>
+          <template #default="scope">
+            {{formatNumber(scope.row.before)}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="amount"  label="충전금액" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span style="color: #ff0000;">충전금액</span>
+          </template>
+          <template #default="scope">
+            {{formatNumber(scope.row.amount)}}
+          </template>
+        </el-table-column>
+        <el-table-column  label="충전후 금액"  align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>충전 <span style="color: #ff0000;">후</span> 금액</span>
+          </template>
             <template #default="scope">
-                {{scope.row.before + scope.row.amount}}
+                {{formatNumber(scope.row.before + scope.row.amount)}}
             </template>
         </el-table-column>
-        <el-table-column prop="user.username" label="아이디" align="center"></el-table-column>
-        <el-table-column prop="user.nickname" label="닉네임" align="center"></el-table-column>
-        <el-table-column prop="user.reallyname" label="예금주" ></el-table-column>
-        <el-table-column prop="user.bank_name" label="은행명" ></el-table-column>
-        <el-table-column prop="user.bank_card" label="계좌번호" ></el-table-column>
-        <el-table-column  label="메모" min-width="160"></el-table-column>
-        <el-table-column prop="created_at" label="신청일시" ></el-table-column>
-        <el-table-column prop="approved_at" label="완료일시" ></el-table-column>
-        <el-table-column prop="no_at" label="취소일시" ></el-table-column>
+        <el-table-column prop="user.username" label="ID" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>ID</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.nickname" label="닉네임" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>닉네임</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.reallyname" label="예금주" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>예금주</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.reallyname" label="실 입금인" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>실 입금인</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.bank_name" label="은행명" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>은행명</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.bank_card" label="계좌번호" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>계좌번호</span>
+          </template>
+        </el-table-column>
+        <el-table-column  label="메모" min-width="160" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>메모</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_at" label="신청일시" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>신청일시</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="approved_at" label="완료일시" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>완료일시</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="no_at" label="취소일시" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>취소일시</span>
+          </template>
+        </el-table-column>
     </el-table>
 
     <el-pagination layout="prev, pager, next"
@@ -205,18 +311,27 @@ watch(
     
     </el-divider>
   <el-tabs v-model="active2Name" class="demo-tabs" @tab-change="getwithdrawalList()">
-    <el-tab-pane :label="`대기중(${count.total2_1})`" name="1"></el-tab-pane>
-    <el-tab-pane :label="`완료(${count.total2_2})`" name="2"></el-tab-pane>
-    <el-tab-pane :label="`취소(${count.total2_0})`" name="0"></el-tab-pane>
+    <el-tab-pane :label="`환전신청(${count.total2_1})`" name="1"></el-tab-pane>
+    <el-tab-pane :label="`환전완료(${count.total2_2})`" name="2"></el-tab-pane>
+    <el-tab-pane :label="`환전취소(${count.total2_0})`" name="0"></el-tab-pane>
 
   </el-tabs>
     <el-table :data="status2Data" style="width: 100%" border :cell-style="setColumnStyle2">
-        <el-table-column prop="id" label="No" width="80"></el-table-column>
+        <el-table-column prop="id" label="환전번호" width="100" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>환전번호</span>
+          </template>
+        </el-table-column>
         <el-table-column  label="상태" width="220" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>상태</span>
+          </template>
             <template #default="scope">
-              <span v-if="active2Name == '1'">대기중</span>
-              <span v-if="active2Name == '2'">승인</span>
-              <span v-if="active2Name == '0'">취소</span>
+              <span v-if="active2Name == '1'">환전 대기중</span>
+              <span v-if="active2Name == '2'">환전 완료</span>
+              <span v-if="active2Name == '0'">환전 취소</span>
               <el-popconfirm hide-icon
               title="정말 환전 하시겠습니까?"
               @confirm="handlewEdit(scope.row)"
@@ -232,28 +347,93 @@ watch(
               width="200"
               >
     <template #reference>
-                <el-button size="small" type="danger"   v-if="active2Name == '1'">거부</el-button>
+                <el-button size="small" type="danger"   v-if="active2Name == '1' && scope.row.type == '1'">거부</el-button>
               </template>
                 </el-popconfirm>
             </template>
         </el-table-column>
         
-        <el-table-column prop="before" label="충전전 금액" align="center"></el-table-column>
-        <el-table-column prop="amount" label="충전금액" align="center"></el-table-column>
-        <el-table-column  label="충전후 금액" v-if="active2Name == '1'" align="center">
+        <el-table-column prop="before" label="환전전 금액" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>환전 <span style="color: #0015ff;"> 전</span> 금액</span>
+          </template>
           <template #default="scope">
-                {{scope.row.before - scope.row.amount}}
+            {{formatNumber(scope.row.before)}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="amount" label="환전금액" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span style="color: #0015ff;">환전금액</span>
+          </template>
+          <template #default="scope">
+            {{formatNumber(scope.row.amount)}}
+          </template>
+        </el-table-column>
+        <el-table-column  label="환전 후 금액"  align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>환전 <span style="color: #0015ff;">후</span> 금액</span>
+          </template>
+          <template #default="scope">
+                {{formatNumber(scope.row.before - scope.row.amount)}}
             </template>
         </el-table-column>
-        <el-table-column prop="user.username" label="아이디" align="center"></el-table-column>
-        <el-table-column prop="user.nickname" label="닉네임" align="center"></el-table-column>
-        <el-table-column prop="user.reallyname" label="예금주" ></el-table-column>
-        <el-table-column prop="user.bank_name" label="은행명" ></el-table-column>
-        <el-table-column prop="user.bank_card" label="계좌번호" ></el-table-column>
-        <el-table-column  label="메모" min-width="170" ></el-table-column>
-        <el-table-column prop="created_at" label="신청일시" ></el-table-column>
-        <el-table-column prop="approved_at" label="완료일시" ></el-table-column>
-        <el-table-column prop="no_at" label="취소일시" ></el-table-column>
+        <el-table-column prop="user.username" label="ID" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>ID</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.nickname" label="닉네임" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>닉네임</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.reallyname" label="예금주" align="center" >
+          <template #header>
+            <el-input></el-input>
+            <span>예금주</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.bank_name" label="은행명" align="center" >
+          <template #header>
+            <el-input></el-input>
+            <span>은행명</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user.bank_card" label="계좌번호" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>계좌번호</span>
+          </template>
+        </el-table-column>
+        <el-table-column  label="메모" min-width="170" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>메모</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_at" label="신청일시" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>신청일시</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="approved_at" label="완료일시" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>완료일시</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="no_at" label="취소일시" align="center">
+          <template #header>
+            <el-input></el-input>
+            <span>취소일시</span>
+          </template>
+        </el-table-column>
     </el-table>
 
     <el-pagination layout="prev, pager, next"

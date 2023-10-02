@@ -68,6 +68,8 @@ const handleWeb = (command: string) => {
 	router.push('/');
 	location.reload();
 };
+
+
 </script>
 <template>
 	<div class="header">
@@ -93,10 +95,7 @@ const handleWeb = (command: string) => {
 				
 				<el-dropdown class="user-name" trigger="click" @command="handleCommand">
 					<span class="el-dropdown-link">
-						{{ username }}
-						<el-icon class="el-icon--right">
-							<arrow-down />
-						</el-icon>
+						[ 로그아웃 ]
 					</span>
 					<template #dropdown>
 						<el-dropdown-menu>
@@ -143,6 +142,7 @@ const handleWeb = (command: string) => {
 .header-user-con {
 	display: flex;
 	height: 60px;
+	padding-top: 10px;
 	align-items: center;
 }
 .btn-fullscreen {
@@ -192,4 +192,5 @@ const handleWeb = (command: string) => {
 .web-select{
 	width: 150px;
 }
+
 </style>

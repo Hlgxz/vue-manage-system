@@ -8,10 +8,10 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus'
 
 const http = axios.create({
-    baseURL: 'http://192.168.0.108:8000/admin',
-    //baseURL: 'https://emmmmhahahaha.icu/api/admin',
+    //baseURL: 'http://192.168.0.108:8000/admin',
+    baseURL: 'https://emmmmhahahaha.icu/admin',
     // 请求超时时间
-    timeout: 5000
+    timeout: 7000
 });
 // 创建一个 Vue Router 实例
 const router = useRouter();

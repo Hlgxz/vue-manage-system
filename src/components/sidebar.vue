@@ -23,11 +23,11 @@ const onRoutes = computed(() => {
 </script>
 
 <template>
-    <div class="sidebar">
+    <div class="sidebar" v-if="sidebarStore.collapse">
         <el-menu
             class="sidebar-el-menu"
             :default-active="onRoutes"
-            :collapse="sidebarStore.collapse"
+            
             background-color="#324157"
             text-color="#bfcbd9"
             active-text-color="#20a0ff"

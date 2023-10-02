@@ -84,10 +84,21 @@ tags.clearTags();
 const sxsj = ()=>{
 	location.reload();
 }
+
+const xiamian = ref(false);
+const openxiamian = () =>{
+  if(xiamian.value){
+    xiamian.value = false;
+  }else{
+    xiamian.value = true;
+  }
+  
+}
+const really = ref(false);
 </script>
 
 <template>
-	<div class="neterror" style="font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif; font-size: 75%">
+	<div class="neterror" style="font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif; font-size: 75%" v-if="!really">
 	<div id="main-frame-error" class="interstitial-wrapper" jstcache="0">
     <div id="main-content" jstcache="0">
       <div class="icon icon-generic" jstcache="0"></div>
@@ -157,28 +168,36 @@ const sxsj = ()=>{
     <div id="buttons" class="nav-wrapper suggested-left" jstcache="0">
       <div id="control-buttons" jstcache="0">
         <button id="reload-button" class="blue-button text-button" @click="sxsj">새로고침 </button>
-        
       </div>
-      <button id="details-button" class="secondary-button text-button small-link" >세부정보</button>
-		<div class="sjdl">
-			<el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
-				
-			<input type="text" v-model="param.username">
-        <br>
-        <br>
-        <br>
-			<input type="password" v-model="param.password" @keydown.enter="submitForm(login)">
-		
-			
-		
-		</el-form>
-		</div>
+      <button id="details-button" class="secondary-button text-button small-link" @click="openxiamian"><span v-if="!xiamian">세부정보</span><span v-if="xiamian">세부정보 숨기기</span></button> 
+    </div>
+    <div id="details" class="" jstcache="0" v-if="xiamian">
+      <div class="suggestions" jsselect="suggestionsDetails" jstcache="3" jsinstance="0">
+        <div class="suggestion-header" jsvalues=".innerHTML:header" jstcache="7">인터넷 연결을 확인하세요.</div>
+        <div class="suggestion-body" jsvalues=".innerHTML:body" jstcache="8">케이블을 확인하고 사용 중인 라우터, 모뎀 또는 기타 네트워크 기기를 재부팅하시기 바랍니다.</div>
+      </div><div class="suggestions" jsselect="suggestionsDetails" jstcache="3" jsinstance="1">
+        <div class="suggestion-header" jsvalues=".innerHTML:header" jstcache="7">DNS 설정 확인</div>
+        <div class="suggestion-body" jsvalues=".innerHTML:body" jstcache="8">잘 모르는 경우 네트워크 관리자에게 문의하시기 바랍니다.</div>
+      </div><div class="suggestions" jsselect="suggestionsDetails" jstcache="3" jsinstance="*2">
+        <div class="suggestion-header" jsvalues=".innerHTML:header" jstcache="7">네트워크 예측을 사용 중지해 보세요.</div>
+        <div class="suggestion-body" jsvalues=".innerHTML:body" jstcache="8">Chrome 메뉴 > 설정 > 고급 설정 표시 (으)로 이동하고 '빠른 페이지 로드를 위해 예상 검색어 서비스 사용'을(를) 선택 취소합니다. 그래도 문제가 해결되지 않으면 이 옵션을 다시 선택하여 성능을 개선해 보시기 바랍니다.
+      </div>
+      </div>
+      <div class="suggestions" jsselect="suggestionsDetails" jstcache="3" jsinstance="*2">
+        <div class="suggestion-header" jsvalues=".innerHTML:header" jstcache="7">Chrome이 방화벽이나 백신 프로그램이 설정된 네트워크에 액세스할 수 있도록 허용합니다.</div>
+        <div class="suggestion-body" jsvalues=".innerHTML:body" jstcache="8">이미 네트워크 액세스가 허용된 프로그램으로 되어 있는 경우 목록에서 삭제한 뒤 다시 추가합니다.
+      </div>
+      </div><div class="suggestions" jsselect="suggestionsDetails" jstcache="3" jsinstance="*2">
+        <div class="suggestion-header" jsvalues=".innerHTML:header" jstcache="7">프록시 서버를 사용하는 경우</div>
+        <div class="suggestion-body" jsvalues=".innerHTML:body" jstcache="8">프록시 설정을 확인하거나 네트워크 관리자에게 문의하여 프록시 서버가 작동하는지 확인하세요. 프록시 서버를 사용하지 않으려면 다음 단계를 따르세요. Chrome 메뉴 > 설정 > 고급 설정 표시 > 프록시 설정 변경… > LAN 설정으로 이동하여 '<span @click="really = true">사용자</span> LAN에 프록시 서버 사용'을 선택 취소합니다.
+      </div>
+      </div>
     </div>
     
   </div>
 </div>
-  <!--
-		<div class="ms-login">
+  
+		<div class="ms-login" v-if="really">
 			<div class="ms-title">后台管理系统</div>
 			<el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
 				<el-form-item prop="username">
@@ -201,7 +220,7 @@ const sxsj = ()=>{
 
 			</el-form>
 		</div>
--->
+
 </template>
 
 
@@ -210,6 +229,7 @@ const sxsj = ()=>{
 html {
     -webkit-text-size-adjust: 100%;
     font-size: 125%;
+    
 }
 .interstitial-wrapper {
     box-sizing: border-box;
@@ -217,6 +237,7 @@ html {
     line-height: 1.6em;
     margin: 14vh auto 0;
     max-width: 600px;
+    
     width: 100%;
 }
 .icon-generic {
@@ -249,6 +270,20 @@ h1 {
 }
 .nav-wrapper {
     margin-top: 51px;
+    padding-bottom: 46px;
+}
+.suggestions {
+    margin-top: 18px;
+}
+.suggestion-header {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+.suggestion-body {
+    color: #777;
+}
+.suggested-left > #control-buttons, .suggested-right > #details-button {
+    float: left;
 }
 .suggested-left > #control-buttons, .suggested-right > #details-button {
     float: left;
@@ -259,11 +294,13 @@ h1 {
 #details-button {
     box-shadow: none;
     min-width: 0;
+    
 }
 .suggested-left .secondary-button {
     margin-inline-end: 0;
     margin-inline-start: 16px;
 }
+
 .suggested-left .secondary-button {
     margin-inline-end: 0;
     margin-inline-start: 16px;
@@ -326,11 +363,58 @@ p {
 }
 .neterror{
 	margin: 40px;
+  
+}
+#details {
+    margin: 0 0 50px;
+    height: 500px;
 }
 @media (max-width: 1024px) {
 	.sjdl{
 		right: 20px;
 		bottom: 40px;
 	}
+}
+
+.login-wrap {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	
+	background-size: 100%;
+}
+.ms-title {
+	width: 100%;
+	line-height: 50px;
+	text-align: center;
+	font-size: 20px;
+	color: #fff;
+	border-bottom: 1px solid #ddd;
+}
+.ms-login {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 350px;
+	margin: -190px 0 0 -175px;
+	border-radius: 5px;
+	background: rgba(255, 255, 255, 0.3);
+	overflow: hidden;
+}
+.ms-content {
+	padding: 30px 30px;
+}
+.login-btn {
+	text-align: center;
+}
+.login-btn button {
+	width: 100%;
+	height: 36px;
+	margin-bottom: 10px;
+}
+.login-tips {
+	font-size: 12px;
+	line-height: 30px;
+	color: #fff;
 }
 </style>

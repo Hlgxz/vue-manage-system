@@ -143,7 +143,7 @@ const routes: RouteRecordRaw[] = [
                 name: 'deposit',
                 meta: {
                     title: '충전/환전',
-                    permiss: '3',
+                    permiss: '16',
                 },
                 component: () => import(/* webpackChunkName: "tabs" */ '../views/deposit.vue'),
             },
@@ -175,7 +175,69 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "tabs" */ '../views/integrated.vue'),
             },
-            
+            {
+                path: '/messages',
+                name: 'messages',
+                meta: {
+                    title: 'messages',
+                    permiss: '3',
+                },
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/messages.vue'),
+            },
+            {
+                path: '/logoff',
+                name: 'logoff',
+                meta: {
+                    title: 'logoff',
+                    permiss: '3',
+                },
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/logoff.vue'),
+            },
+            {
+                path: '/ipset',
+                name: 'ipset',
+                meta: {
+                    title: 'ipset',
+                    permiss: '3',
+                },
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/ipset.vue'),
+            },
+            {
+                path: '/ip',
+                name: 'ip',
+                meta: {
+                    title: 'ip',
+                    permiss: '3',
+                },
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/ip.vue'),
+            },
+            {
+                path: '/statistics',
+                name: 'statistics',
+                meta: {
+                    title: 'statistics',
+                    permiss: '3',
+                },
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/statistics.vue'),
+            },
+            {
+                path: '/statistics2',
+                name: 'statistics2',
+                meta: {
+                    title: 'statistics2',
+                    permiss: '3',
+                },
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/statistics2.vue'),
+            },
+            {
+                path: '/agentLog',
+                name: 'agentLog',
+                meta: {
+                    title: 'agentLog',
+                    permiss: '3',
+                },
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/agentLog.vue'),
+            },
             
             
             

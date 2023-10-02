@@ -7,10 +7,12 @@ import {Referrs} from '../api/user'
 const network = ref<Network | null>(null);
 const getReferrs = () =>{
    Referrs().then(res=>{
-      nodes.clear();
+    nodes.clear();
     edges.clear();
+    
     nodes.add(res.data.data.nodes); // 添加新的节点
     edges.add(res.data.data.edges); // 添加新的边
+     console.log(res.data.data);
      
    })}
   // 明确地定义节点和边的类型

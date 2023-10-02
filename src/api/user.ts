@@ -33,12 +33,13 @@ export const MoneyData = (page:number | string) => {
 };
 
 //分页获取所有bet数据
-export const BetData = (status:number | string,page:number | string) => {
+export const BetData = (status:number | string,page:number | string,type:number | string) => {
    return request({
        url: `/User/BetLog/${status}`,
        method: 'get',
        params:{
-         page
+         page,
+         type
        }
    });
 };
@@ -213,6 +214,61 @@ export const countAPI = () => {
    return request({
        url: '/User/getCounts',
        method: 'get',
+       
+   });
+};
+
+//查询待注销人数
+export const logoffAPI = () => {
+   return request({
+       url: '/User/logoff',
+       method: 'get',
+       
+   });
+};
+
+//查询待注销人数
+export const offokAPI = (id:number) => {
+   return request({
+       url: '/User/logoff',
+       method: 'post',
+       params:{
+         id
+       }
+       
+   });
+};
+
+
+//查询ip重复
+export const DuplicateIpsAPI = () => {
+   return request({
+       url: '/User/findDuplicateIps',
+       method: 'get',
+       
+   });
+};
+
+//黑名单
+export const hmdAPI = (id:number) => {
+   return request({
+       url: '/User/hmd',
+       method: 'post',
+       params:{
+         id
+       }
+       
+   });
+};
+
+//解除黑名单
+export const jchmdAPI = (id:number) => {
+   return request({
+       url: '/User/jchmd',
+       method: 'post',
+       params:{
+         id
+       }
        
    });
 };

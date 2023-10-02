@@ -8,8 +8,9 @@
 <script setup lang="ts">
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/ko';
+
 </script>
 <style>
-@import './assets/css/main.css';
+
 @import './assets/css/color-dark.css';
 </style>

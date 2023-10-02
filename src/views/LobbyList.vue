@@ -40,19 +40,11 @@ const updata = () => {
 <template>
 <div class="container">
    <div class="handle-box">
-   <el-button @click="updata">获取更新</el-button>
+   <el-button @click="updata">새로고침</el-button>
    </div>
 
    <el-table :data="tableData" height="900">
-      <el-table-column prop="title" label="title" sortable />
-      <el-table-column prop="vendor" label="vendor" sortable />
-      
-      <el-table-column  label="icon">
-         <template #default="scope">
-            <img :src="scope.row.thumbnail" alt="" width="150" >
-         </template>
-      </el-table-column>
-      <el-table-column  label="type" sortable>
+      <el-table-column  label="구분" sortable>
          <template #default="scope">
             <el-select v-model="scope.row.types" class="m-2" placeholder="Select" size="large" @change="uplobby(scope.row.id,1,scope.row.types)">
     <el-option
@@ -78,11 +70,35 @@ const updata = () => {
   </el-select>
          </template>
       </el-table-column>
-      <el-table-column prop="create_time" label="create_time" />
-      <el-table-column prop="update_time" label="update_time" />
-      <el-table-column prop="state" label="status" width="80">
+      <el-table-column prop="title" label="게임" sortable />
+      <el-table-column prop="vendor" label="API 벤더사 vendor" sortable />
+      
+      <el-table-column  label="아이콘">
          <template #default="scope">
-            <el-switch :active-value="1" :inactive-value="0" v-model="scope.row.state" @change="uplobby(scope.row.id,2,scope.row.state)" />
+            <img :src="scope.row.thumbnail" alt="" width="150" >
+         </template>
+      </el-table-column>
+      
+      <el-table-column prop="create_time" label="만든 시간" />
+      <el-table-column prop="update_time" label="업데이트 시간" />
+      <el-table-column prop="state" label="상태" >
+         <template #default="scope">
+            <el-select v-model="scope.row.state">
+               <el-option
+               label="진행중"
+               :value="1"
+               />
+               <el-option
+               label="중지"
+               :value="0"
+               />
+            </el-select>
+         </template>
+         
+      </el-table-column>
+      <el-table-column label="확인">
+         <template #default="scope" >
+            <el-button type="primary"  @click="uplobby(scope.row.id,2,scope.row.state)">확인</el-button>
          </template>
       </el-table-column>
    </el-table>

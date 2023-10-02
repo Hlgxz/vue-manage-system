@@ -44,3 +44,24 @@ export const getwdMessage = () => {
         method: 'get'
     });
  };
+
+  //发布消息
+  export const postMessage = ({title,content,user_id}:any) => {
+    return request({
+        url: '/Notice/getMessage',
+        method: 'post',
+        data:{
+            title,
+            content,
+            user_id
+        }
+    });
+ };
+
+ //获取消息
+ export const getuserMessages = () => {
+    return request({
+        url: '/Notice/getMessage',
+        method: 'get'
+    });
+ };

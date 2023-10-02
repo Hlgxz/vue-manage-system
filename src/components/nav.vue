@@ -34,12 +34,12 @@ const hideSubMenu = () => {
    <transition name="fade">
    <div class="top-menu-background" v-if="isSubMenuVisible"></div>
    </transition>
-    <li v-for="item in items" :key="item.id" class="emmm">
+    <li v-for="item in items" :key="item.id" class="emmm" v-permiss="item.permission">
       <img :src="`src/assets/img/free_icon/${item.img_src}.png`" alt="" width="40" height="40">
       {{item.title}}
       <template v-if="item.subs ">
       <ul class="sub-menu" :class="{ visible: isSubMenuVisible }">
-        <li v-for="subItem in item.subs" >
+        <li v-for="subItem in item.subs" v-permiss="subItem.permission">
          <router-link :to="subItem.index_path">{{ subItem.title }}</router-link>
       </li>
       </ul>
@@ -89,7 +89,11 @@ const hideSubMenu = () => {
   position: relative;
   color: #ffffff;
   
-  font-weight: 600;
+  font-weight: 530;
+}
+
+.top-menu ul li a:hover{
+  font-weight: 630;
 }
 .top-menu .sub-menu {
   display: none;
@@ -113,16 +117,18 @@ const hideSubMenu = () => {
   top: 100%;
   left: -20px;
   width: 100%;
-  height: 430px;
+  height: 470px;
   background: #5a6776;
   z-index: -1;
   opacity: 0.7;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 .sub-menu.visible {
   display: block;
 }
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
+  transition: opacity 0.1s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;

@@ -21,7 +21,6 @@ export const usePermissStore = defineStore('permiss', {
 		async getrolesData() {
 			const response = await rolesData(); // 引入上面定义的 API 函数
 			if (response.data.data) {
-				console.log(response.data.data);
 				
 				response.data.data.forEach((item:any) => {
 					// 将 roles 字符串转换为数组

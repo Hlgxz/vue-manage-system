@@ -23,7 +23,7 @@ a {
 
 .content-box {
     position: absolute;
-    left: 250px;
+    left: 0px;
     right: 0;
     top: 60px;
     bottom: 0;
@@ -42,11 +42,12 @@ a {
 }
 
 .content-collapse {
-    left: 65px;
+    left: 250px;
 }
 
 .container {
     padding: 30px;
+    padding-top: 0px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -131,7 +132,21 @@ a {
     text-align: center;
     font-size: 18px;
 }
+.el-tabs__nav .el-tabs__item{
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.el-table__header .cell {
+    color: #181818 !important; /* 或者其他你想设置的颜色 */
+    font-weight: 800;
+    padding: 2px 0;
+  }
+  .el-table .cell {
+    text-align: center !important;
+  }
 
 [hidden]{
     display: none !important;
 }
+

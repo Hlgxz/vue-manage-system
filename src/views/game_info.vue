@@ -1,18 +1,41 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getfootballlist } from "../api/getlist"
+import { getSportlist } from "../api/sport"
 //游戏管理   
 const tableData = ref<any[]>([]);
-const tabletest = ref<any[]>([]);
+const total = ref(0);
 const activeName = ref('1');
+
+const currentPage = ref(1);
 const getlist = () =>{
-   getfootballlist().then(res=>{
+   getSportlist(currentPage.value).then(res=>{
       
-      tabletest.value = res.data.result;
-      console.log(tabletest.value);
+    tableData.value = res.data.data.data;
+    total.value =res.data.data.total
+    console.log(res.data.data.data);
    })
 }
 onMounted(getlist);
+const current =() =>{
+  getlist();
+}
+
+const selectedRows = ref([]);
+
+    const tableRowClassName = ({ row }:{row:any}) => {
+      if (selectedRows.value.includes(row as never)) {
+        return "highlight-row";
+      }
+      return "jx-row";
+    };
+
+    const handleSelect = (selection:any, row:any) => {
+      selectedRows.value = selection;
+    };
+
+    const handleSelectAll = (selection:any) => {
+      selectedRows.value = selection;
+    };
 </script>
 
 <template>
@@ -22,83 +45,326 @@ onMounted(getlist);
     <el-tab-pane label="입력" name="1"></el-tab-pane>
     <el-tab-pane label="확인" name="0"></el-tab-pane>
     <el-tab-pane label="복원" name="2"></el-tab-pane>
+    <el-tab-pane label="게임 분류" name="3"></el-tab-pane>
+    <el-tab-pane label="종목 / 리그 설정" name="4" ></el-tab-pane>
+    <el-tab-pane label="엑셀 자동등록" name="3"></el-tab-pane>
+    <el-tab-pane label="직접 게임등록" name="6"></el-tab-pane>
   </el-tabs>
-      <el-table :data="tableData" border style="width: 100%">
-    <el-table-column  label="게임일시" width="180" />
-    <el-table-column  label="구분" width="180" />
-    <el-table-column  label="리그" />
-    <el-table-column  label="종목" />
-    <el-table-column  label="승(홈팀)" />
-    <el-table-column  label="무" />
-    <el-table-column  label="패(원정팀)" />
-    <el-table-column  label="당첨" />
-    <el-table-column  label="수익" />
-    <el-table-column  label="배팅" />
-    <el-table-column  label="당첨" />
-    <el-table-column  label="수익" />
-    <el-table-column  label="배팅" />
-    <el-table-column  label="당첨" />
-    <el-table-column  label="수익" />
-    <el-table-column  label="배팅" />
-    <el-table-column  label="홈" />
-    <el-table-column  label="원정" />
-    <el-table-column  label="상태" />
-    <el-table-column  label="button" />
+    <el-tabs>
+      <el-tab-pane label="진행중" name="1"></el-tab-pane>
+      <el-tab-pane label="종료" name="1"></el-tab-pane>
+      <el-tab-pane label="대기" name="1"></el-tab-pane>
+      <el-tab-pane label="취소" name="1"></el-tab-pane>
+      <el-tab-pane label="적중특례" name="1"></el-tab-pane>
+      <el-tab-pane label="숨김" name="1"></el-tab-pane>
+    </el-tabs>
+
+      <el-table :data="tableData" border style="width: 100%" 
+      :row-class-name="tableRowClassName"
+    @select="handleSelect"
+    @select-all="handleSelectAll">
+        <el-table-column type="selection" min-width="55" align="center"/>
+    <el-table-column prop="time"  label="게임일시" min-width="180" align="center">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+            <span>게임일시</span>
+          </template>
+    </el-table-column>
+    <el-table-column  label="구분" min-width="180" align="center">
+      <template #header>
+        <el-input />
+            <span>구분</span>
+          </template>
+    </el-table-column>/>
+    <el-table-column prop="league_name"  label="리그" align="center" min-width="170">
+      <template #header>
+        <el-input />
+            <span>리그</span>
+          </template>
+    </el-table-column>
+    <el-table-column prop="sport"  label="종목" align="center"  min-width="220">
+      <template #header>
+        <el-input />
+            <span>종목</span>
+          </template>
+    </el-table-column>
+    <el-table-column prop="home_name" label="승(홈팀)" align="center" min-width="200">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+            <span>승(홈팀)</span>
+          </template>
+      <template #default="scope">
+        {{ scope.row.home_name }}
+        
+        <div class="hs">1.11</div>
+      </template>
+    </el-table-column>
+    <el-table-column  label="무" align="center" min-width="200">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+            <span>무</span>
+          </template>
+      <br>
+      <div class="hs">3.45</div>
+      
+    </el-table-column>
+    <el-table-column  label="패(원정팀)" align="center" class="rightborder" min-width="200">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+            <span>패(원정팀)</span>
+          </template>
+      <template #default="scope">
+        {{ scope.row.away_name }}
+        
+        <div class="hs">1.11</div>
+      </template>
+    </el-table-column>
+    
+    <el-table-column   align="center" min-width="120" >
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="ls">
+          당첨
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+    <el-table-column  label="수익" align="center" min-width="120">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="ls">
+          
+          수익
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+    <el-table-column  label="배팅" align="center" min-width="120" class="rightborder">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="ls">
+          베팅
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+  
+    <el-table-column  label="당첨" align="center" min-width="120">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="zs">
+          당첨
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column> 
+    <el-table-column  label="수익" align="center" min-width="120">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="zs">
+          수익
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+    <el-table-column  label="배팅" align="center" min-width="120" class="rightborder">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="zs">
+          베팅
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+    <el-table-column  label="당첨" align="center" min-width="120">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="gs">
+          당첨
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+    <el-table-column  label="수익" align="center" min-width="120">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="gs">
+          수익
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+    <el-table-column  label="배팅" align="center" min-width="120">
+      <template #header>
+        <el-input style="width:50%" />
+        <el-input style="width:50%" />
+        <div class="gs">
+          베팅
+        </div>
+      </template>
+      0[0]
+      <br>
+      0[0]
+    </el-table-column>
+    <el-table-column  label="홈" align="center" min-width="100">
+      <template #header>
+        <el-input/>
+        <span>
+          홈
+        </span>
+      </template>
+      
+      <template #default="scope">
+      <el-input type="number" v-model="scope.row.input1"></el-input>
+    </template>
+    </el-table-column>
+    <el-table-column  label="원정" align="center" min-width="100">
+      <template #header>
+        <el-input />
+        <span>
+          원정
+        </span>
+      </template>
+      <template #default="scope">
+      <el-input type="number" v-model="scope.row.input2"></el-input>
+    </template>
+    </el-table-column>
+    <el-table-column  label="상태" align="center" min-width="100">
+      <template #header>
+        <el-input />
+        <span>
+          상태
+        </span>
+      </template>
+      <template #default="scope">
+                <el-select>
+                  <el-option
+                    label="진행중"
+                    value="진행중"
+                    />
+                    <el-option
+                    label="종료"
+                    value="종료"
+                    />
+                  <el-option
+                    label="대기"
+                    value="대기"
+                    />
+                    <el-option
+                    label="취소"
+                    value="취소"
+                    />
+                    <el-option
+                    label="적중특례"
+                    value="적중특례"
+                    />
+                    <el-option
+                    label="숨김"
+                    value="숨김"
+                    />
+                    
+                    
+                </el-select>
+              </template>
+    </el-table-column>
+    <el-table-column  align="center" min-width="100">
+      <el-button type="primary">확인</el-button>
+    </el-table-column>
   </el-table>
 
-
-
-
-  <el-table :data="tabletest" border style="width: 100%">
-    <el-table-column prop="away_id"  label="away_id"  />
-    <el-table-column  label="away_image" width="70" >
-      <template #default="scope">
-         <img :src="scope.row.away_image" alt="" width="50" height="50">
-      </template>
-    </el-table-column>
-    <el-table-column prop="away_name"  label="away_name" />
-    <el-table-column prop="away_name_eng"  label="away_name_eng" />
-    <el-table-column prop="cc"  label="cc" />
-    <el-table-column  label="cc_image" width="70" >
-      <template #default="scope">
-         <img :src="scope.row.cc_image" alt="" width="50" height="50">
-      </template>
-    </el-table-column>
-    <el-table-column prop="cc_kr"  label="cc_kr" />
-    <el-table-column prop="home_id"  label="home_id" />
-    <el-table-column  label="home_image" width="70" >
-      <template #default="scope">
-         <img :src="scope.row.home_image" alt="" width="50" height="50">
-      </template>
-    </el-table-column>
-    <el-table-column prop="home_name"  label="home_name" />
-    <el-table-column prop="home_name_eng"  label="home_name_eng" />
-    <el-table-column prop="id"  label="id" />
-    <el-table-column prop="inplay_id"  label="inplay_id" />
-    <el-table-column prop="is_inplay_ing"  label="is_inplay_ing" />
-    <el-table-column prop="league_id"  label="league_id" />
-    <el-table-column  label="league_image" width="70" >
-      <template #default="scope">
-         <img :src="scope.row.league_image" alt="" width="50" height="50">
-      </template>
-    </el-table-column>
-    <el-table-column prop="league_name"  label="league_name" />
-    <el-table-column prop="league_name_eng"  label="league_name_eng" />
-    <el-table-column prop="period_id"  label="period_id" />
-    <el-table-column prop="period_kr"  label="period_kr" />
-    <el-table-column prop="prematch_id"  label="prematch_id" />
-    <el-table-column prop="sport"  label="sport" />
-    <el-table-column prop="status_id"  label="status_id" />
-    <el-table-column prop="status_kr"  label="status_kr" />
-    <el-table-column prop="time"  label="time" />
-    <el-table-column prop="time_unix"  label="time_unix" />
-    
-    <el-table-column prop="updated_at"  label="updated_at" />
-    
-  </el-table>
+  <div class="pagination">
+  <el-pagination background layout="prev, pager, next"
+   :total="total"
+   :page-size="20" 
+   v-model:current-page="currentPage"
+   @current-change="current"
+   />
+   
+   </div>
     </div>
 </template>
 
 <style scoped>
-   
-</style>../api/getlist
+.ls{
+  background-color: rgb(157, 221, 246);
+  color: black;
+}
+.zs{
+  background-color: #facfe6;
+  color: black;
+}
+.gs{
+  background-color: #bfffbf;
+  color: black;
+}
+.hs{
+  background-color: #dadada;
+}
+:deep().el-table .el-table__cell {
+  padding: 0px ;
+  font-size:14px
+}
+
+:deep().jx-row{
+  --el-table-tr-bg-color: #ffff99;
+}
+:deep().highlight-row{
+  --el-table-tr-bg-color: #f6faff;
+}
+:deep()#tab-3{
+  margin-left: 60px;
+}
+
+/* 改变表头的文本色 */
+
+:deep().el-table .el-table_1_column_8 .cell,
+:deep().el-table .el-table_1_column_11 .cell,
+:deep().el-table .el-table_1_column_14 .cell,
+:deep().el-table .el-table_1_column_17 .cell
+ {
+  border-right: 1px solid rgb(0, 0, 0);
+}
+
+
+:deep().el-table .el-table_1_column_9 .cell,
+:deep().el-table .el-table_1_column_10 .cell,
+:deep().el-table .el-table_1_column_11 .cell,
+:deep().el-table .el-table_1_column_12 .cell,
+:deep().el-table .el-table_1_column_13 .cell,
+:deep().el-table .el-table_1_column_14 .cell,
+:deep().el-table .el-table_1_column_15 .cell,
+:deep().el-table .el-table_1_column_16 .cell,
+:deep().el-table .el-table_1_column_17 .cell
+ {
+  border-bottom: 1px solid rgb(0, 0, 0);
+}
+
+</style>

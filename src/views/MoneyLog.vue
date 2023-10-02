@@ -67,95 +67,86 @@ const handleNew = () => {
 	});
 	 editVisible.value = true;
 };
-const saveEdit = () => {
 
-   MoneySave({user_id:selectedId.value ,money:money.value,memo:memo.value}).then(res => {
-      console.log(res.data);
-      getData();
-   })
-
-
-   editVisible.value = false;
-};
 
 
 </script>
 
 <template>
 <div class="container">
-   <div class="handle-box">
-      <el-button type="primary" :icon="Plus" @click="handleNew()">신규 거래</el-button>
-   </div>
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="id" label="id" width="180" />
-    <el-table-column prop="user_name" label="사용자 이름" width="180" />
+   
+  <el-table :data="tableData" style="width: 100%" border>
+    <el-table-column prop="user_name" label="ID" width="180" >
+      <template #header>
+        <el-input /><span>ID</span>
+          </template>
+    </el-table-column>
     
-    <el-table-column prop="amount" label="거래 금액" />
-    <el-table-column prop="before" label="거래 이전 금액" />
+    <el-table-column prop="amount" label="거래 금액" >
+      <template #header>
+         <el-input style="width: 50%;"/>
+        <el-input style="width: 50%;"/>
+        <span>거래 금액</span>
+          </template>
+    </el-table-column>
+    <el-table-column prop="before" label="거래 이전 금액">
+      <template #header>
+         <el-input style="width: 50%;"/>
+        <el-input style="width: 50%;"/>
+        <span>거래 이전 금액</span>
+          </template>
+    </el-table-column>
     <el-table-column  label="거래 후 잔액">
+      <template #header>
+         <el-input style="width: 50%;"/>
+        <el-input style="width: 50%;"/>
+        <span>거래 후 잔액</span>
+          </template>
       <template #default="scope">
          {{ scope.row.amount +scope.row.before }}
       </template>
     </el-table-column>
-    <el-table-column prop="type" label="type" />
+    <el-table-column prop="type" label="구분">
+      <template #header>
+        <el-input /><span>구분</span>
+          </template>
+    </el-table-column>
     
-    <el-table-column  label="external">
+    <el-table-column  label="상세">
+      <template #header>
+        <el-input /><span>상세</span>
+          </template>
       <template #default="scope">
-         {{ scope.row.external?.detail.data.gameType }}
-         <br/>
-         {{ scope.row.external?.detail.data.result.banker.cards }}
-         {{ scope.row.external?.detail.data.result.banker.score }}
-         <br/>
-         {{ scope.row.external?.detail.data.result.player.cards }}
-         {{ scope.row.external?.detail.data.result.player.score }}
+         id:{{ scope.row.details?.game.id }}
+         <br>
+         round:{{ scope.row.details?.game.round }}
+         <br>
+         title:{{ scope.row.details?.game.title }}
+         <br>
+         type:{{ scope.row.details?.game.type }}
+         <br>
+         vendor:{{ scope.row.details?.game.vendor }}
+         
       </template>
     </el-table-column>
-    <el-table-column prop="created_at" label="생성 시간" />
+    <el-table-column prop="created_at" label="만든 날짜" >
+      <template #header>
+        <el-input style="width: 50%;"/>
+        <el-input style="width: 50%;"/>
+        <span>만든 날짜</span>
+          </template>
+    </el-table-column>
   </el-table>
   <div class="pagination">
   <el-pagination background layout="prev, pager, next"
    :total="total" 
+   :page-size="20" 
    v-model:current-page="currentPage"
    @current-change="current"
    />
    </div>
   
-		<!--弹出框 -->
-		<el-dialog title="新增交易" v-model="editVisible" width="30%">
-			<el-form label-width="90px">
-            <el-form-item label="用户名">
-				<el-select v-model="selectedId" class="m-2" placeholder="Select" size="large" @change="findId">
-    <el-option
-      v-for="item in idvalue"
-      :key="item.id"
-      :label="item.username"
-      :value="item.id"
-    />
-  </el-select>
-</el-form-item>
-<el-form-item label="昵称">
-<el-input v-model="change.nickname" disabled  />
-</el-form-item>
-<el-form-item label="当前余额">
-<el-input v-model="change.money" disabled  />
-</el-form-item>
-<el-form-item label="变动数额">
-<el-input v-model="money"  />
-</el-form-item>
-<el-form-item label="变更后余额">
-<el-input v-model="endmoney" disabled />
-</el-form-item>
-<el-form-item label="备注">
-<el-input v-model="memo" type="textarea"  />
-</el-form-item>
-			</el-form>
-			<template #footer>
-				<span class="dialog-footer">
-					<el-button @click="editVisible = false">取 消</el-button>
-					<el-button type="primary" @click="saveEdit">确 定</el-button>
-				</span>
-			</template>
-		</el-dialog>
+
 
 </div>  
 </template>

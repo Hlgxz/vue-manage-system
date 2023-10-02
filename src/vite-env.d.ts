@@ -5,6 +5,6 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
-
+declare module 'echarts';
 declare module 'vue-schart';
 declare module 'vue-cropperjs';

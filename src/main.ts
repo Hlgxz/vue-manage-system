@@ -3,13 +3,13 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
-
+import * as echarts from 'echarts';
 import App from './App.vue';
 import router from './router';
 import { usePermissStore } from './store/permiss';
 import 'element-plus/dist/index.css';
 import './assets/css/icon.css';
-
+import './assets/css/main.css';
 
 const app = createApp(App);
 app.use(createPinia().use(piniaPluginPersistedstate));

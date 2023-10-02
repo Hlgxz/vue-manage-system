@@ -76,18 +76,14 @@ const saveEdit = () => {
 <template>
 	<div>
 		<div class="container">
-			<div class="handle-box">
-				
-				<el-input v-model="query.username" placeholder="사용자 이름" class="handle-input mr10"></el-input>
-				<el-button type="primary" :icon="Search" @click="handleSearch">검색</el-button>
-				<el-button type="primary" :icon="Plus">신규</el-button>
-			</div>
+			
 			<el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
 				<el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
 				<el-table-column prop="username" label="사용자 이름"></el-table-column>
 				<el-table-column prop="role_id" label="권한 사이트"></el-table-column>
 				<el-table-column prop="mobile" label="핸드폰"></el-table-column>
 				<el-table-column prop="email" label="메일박스"></el-table-column>
+				<el-table-column prop="token" label="token"></el-table-column>
 				<el-table-column prop="created_at" label="등록 시간"></el-table-column>
 
 			</el-table>
