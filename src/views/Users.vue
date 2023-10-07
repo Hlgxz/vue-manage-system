@@ -43,10 +43,14 @@ const dkdetails =(row:any)=>{
 }
 const open =ref(false);
 const tableRowClassName = ({row,rowIndex,}:any) => {
+  
+  
   if (row.status === '3') {
     return 'hmd-row'
   } else if (row.status === '4') {
     return 'zx-row'
+  } else if (row.is_online === 1){
+    return 'online-row'
   }
   return ''
 }
@@ -132,7 +136,7 @@ const tx = ref(false);
 const open_tx = (username:any,user_id:any)=>{
   
   getuserMoney(username).then(res=>{
-    console.log(res.data);
+    
     usermoney.value = res.data.data.balance;
   })
   tx.value = true;
@@ -179,14 +183,14 @@ const apptx = () => {
             <span>대본사</span>
           </template>
         </el-table-column>
-				<el-table-column  label="본사"  width="180" align="center" sortable >
+				<el-table-column  label="본사"  width="200" align="center" sortable >
           <template #header>
             <el-input></el-input>
             <span >본사</span>
           </template>
           <template #default="scope">
-            <el-button @click.stop="open_cz(scope.row.id)" v-permiss="99">充值</el-button>
-            <el-button @click.stop="open_tx(scope.row.username,scope.row.id)" v-permiss="99">提现</el-button>
+            <el-button @click.stop="open_cz(scope.row.id)" v-permiss="99">충전</el-button>
+            <el-button @click.stop="open_tx(scope.row.username,scope.row.id)" v-permiss="99">현금 인출</el-button>
           </template>
         </el-table-column>
 				<el-table-column prop="referrer_id" label="부본사" width="150" align="center" sortable v-if="open">
@@ -266,7 +270,9 @@ const apptx = () => {
             <span class="money-green">보유금액</span>
             
           </template>
-          0
+          <template #default="scope">
+            {{ scope.row.balance  }}
+          </template>
         </el-table-column>
 				<el-table-column   label="손익금액" sortable class-name="money-red">
           <template #header>
@@ -275,7 +281,7 @@ const apptx = () => {
             <span class="money-red">손익금액</span>
           </template>
           <template #default="scope">
-          {{ 0  }}
+          {{ scope.row.total_recharge - scope.row.total_withdrawal - scope.row.balance  }}
         </template>
         </el-table-column>
 				<el-table-column prop="total_recharge"  label="충전금액" sortable>
@@ -355,16 +361,14 @@ const apptx = () => {
    <el-descriptions-item label="은행명">{{oneuser.bank_name}}</el-descriptions-item>
    <el-descriptions-item label="계좌번호">{{oneuser.bank_card}}</el-descriptions-item>
    <el-descriptions-item label="예금주">{{}}</el-descriptions-item>
-   <el-descriptions-item label="베팅중(개수)">{{}}</el-descriptions-item>
-   <el-descriptions-item label="보유금액">{{}}</el-descriptions-item>
-   <el-descriptions-item label="손익금액">{{}}</el-descriptions-item>
-   <el-descriptions-item label="충전금액">{{}}</el-descriptions-item>
-   <el-descriptions-item label="환전금액">{{}}</el-descriptions-item>
-   <el-descriptions-item label="환전금액">{{}}</el-descriptions-item>
+   <el-descriptions-item label="베팅중(개수)">{{0}}</el-descriptions-item>
+   <el-descriptions-item label="보유금액">{{oneuser.balance}}</el-descriptions-item>
+   <el-descriptions-item label="손익금액">{{oneuser.total_recharge -  oneuser.total_withdrawal  - oneuser.balance}}</el-descriptions-item>
+   <el-descriptions-item label="충전금액">{{oneuser.total_recharge}}</el-descriptions-item>
+   <el-descriptions-item label="환전금액">{{oneuser.total_withdrawal}}</el-descriptions-item>
    <el-descriptions-item label="활동포인트">{{oneuser.score}}</el-descriptions-item>
    <el-descriptions-item label="최종접속">{{oneuser.last_login_ip}}</el-descriptions-item>
    <el-descriptions-item label="접속수">{{oneuser.visits}}</el-descriptions-item>
-   <el-descriptions-item label="손익금액">{{}}</el-descriptions-item>
   </el-descriptions>
   </el-tab-pane>
     <el-tab-pane label="Config" name="second" v-permiss="15">
@@ -372,80 +376,66 @@ const apptx = () => {
       <div v-if="oneuser.agent == '1'">
         <br /><br />
         <el-descriptions border :column="1" style="width: 500px;">
-    <el-descriptions-item label="推荐码">{{ oneuser.getAgent.referral_code }}</el-descriptions-item>
-    <el-descriptions-item label="方案1casino比例">{{ oneuser.getAgent.scheme1_commission_rate }}</el-descriptions-item>
-    <el-descriptions-item label="方案1slot比例">{{ oneuser.getAgent.scheme1_commission_rate_slot }}</el-descriptions-item>
-    <el-descriptions-item label="方案1sport比例">{{ oneuser.getAgent.scheme1_commission_rate_sport }}</el-descriptions-item>
-    <el-descriptions-item label="方案2casino比例">{{ oneuser.getAgent.scheme2_commission_rate }}</el-descriptions-item>
-    <el-descriptions-item label="方案2slot比例">{{ oneuser.getAgent.scheme2_commission_rate_slot }}</el-descriptions-item>
-    <el-descriptions-item label="方案2sport比例">{{ oneuser.getAgent.scheme2_commission_rate_sport }}</el-descriptions-item>
-    <el-descriptions-item label="方案2结算基准">{{ oneuser.getAgent.settlement_threshold }}</el-descriptions-item>
-    <el-descriptions-item label="方案2结算日期">{{ oneuser.getAgent.settlement_date }}</el-descriptions-item>
+    <el-descriptions-item label="추천 코드">{{ oneuser.getAgent.referral_code }}</el-descriptions-item>
+    <el-descriptions-item label="시나리오 1 casino 비율">{{ oneuser.getAgent.scheme1_commission_rate }}</el-descriptions-item>
+    <el-descriptions-item label="시나리오 1 slot 비율">{{ oneuser.getAgent.scheme1_commission_rate_slot }}</el-descriptions-item>
+    <el-descriptions-item label="시나리오 1 sport 비율">{{ oneuser.getAgent.scheme1_commission_rate_sport }}</el-descriptions-item>
+    <el-descriptions-item label="시나리오 2 비율">{{ oneuser.getAgent.scheme2_commission_rate }}</el-descriptions-item>
+    <el-descriptions-item label="시나리오 2 결제 기준">{{ oneuser.getAgent.settlement_threshold }}</el-descriptions-item>
+    <el-descriptions-item label="시나리오 2 결제 날짜">{{ oneuser.getAgent.settlement_date }}</el-descriptions-item>
 
-    <el-descriptions-item label="可提现余额">{{ oneuser.getAgent.money }}</el-descriptions-item>
-    <el-descriptions-item label="用户下注量">{{ oneuser.getAgent.betting_statistics }}</el-descriptions-item>
+    <el-descriptions-item label="현금 인출 가능 잔액">{{ oneuser.getAgent.money }}</el-descriptions-item>
+    <el-descriptions-item label="사용자 주석">{{ oneuser.getAgent.betting_statistics }}</el-descriptions-item>
     
-    <el-descriptions-item label="创建时间">{{ oneuser.getAgent.created_at }}</el-descriptions-item>
+    <el-descriptions-item label="생성 시간">{{ oneuser.getAgent.created_at }}</el-descriptions-item>
   </el-descriptions>
   <br />
-        <el-button @click="closeAngent(oneuser.id)">撤销代理</el-button>
+        <el-button @click="closeAngent(oneuser.id)">에이전트 취소</el-button>
       </div>
       <div v-else>
         <el-form :model="agent" label-width="120px">
-          <el-divider content-position="left">方案1</el-divider>
-    <el-form-item label="casino收益比例">
+          <el-divider content-position="left">시나리오 1</el-divider>
+    <el-form-item label="casino 이익 비율">
       <el-input v-model="agent.type1" style="width: 110px;">
         <template #append>
     <div>%</div>
   </template></el-input>
     </el-form-item>
-    <el-form-item label="sport收益比例">
+    <el-form-item label="sport 이익 비율">
       <el-input v-model="agent.type1_sport" style="width: 110px;">
         <template #append>
     <div>%</div>
   </template></el-input>
     </el-form-item>
-    <el-form-item label="slot收益比例">
+    <el-form-item label="slot 이익 비율">
       <el-input v-model="agent.type1_slot" style="width: 110px;">
         <template #append>
     <div>%</div>
   </template></el-input>
     </el-form-item>
-    <el-divider content-position="left">方案2</el-divider>
-    <el-form-item label="casino收益比例">
+    <el-divider content-position="left">시나리오 2</el-divider>
+    <el-form-item label="casino 이익 비율">
       <el-input v-model="agent.type2" style="width: 110px;">
         <template #append>
     <div>%</div>
   </template></el-input>
     </el-form-item>
-    <el-form-item label="sport收益比例">
-      <el-input v-model="agent.type2_sport" style="width: 110px;">
-        <template #append>
-    <div>%</div>
-  </template></el-input>
-    </el-form-item>
-    <el-form-item label="slot收益比例">
-      <el-input v-model="agent.type2_slot" style="width: 110px;">
-        <template #append>
-    <div>%</div>
-  </template></el-input>
-    </el-form-item>
-    <el-form-item label="结算基准">
+    <el-form-item label="결제 기준">
       <el-input v-model="agent.type2_base" style="width: 110px;">
         <template #append>
     <div>%</div>
   </template></el-input>
     </el-form-item>
-    <el-form-item label="结算日期">
+    <el-form-item label="결제 날짜">
       <el-radio-group v-model="agent.type2_day">
-    <el-radio :label="1">1号</el-radio>
-    <el-radio :label="8">8号</el-radio>
-    <el-radio :label="15">15号</el-radio>
-    <el-radio :label="22">22号</el-radio>
+    <el-radio :label="1">1번</el-radio>
+    <el-radio :label="8">8번</el-radio>
+    <el-radio :label="15">15번</el-radio>
+    <el-radio :label="22">22번</el-radio>
   </el-radio-group>
     </el-form-item>
     </el-form>
-        <el-button @click="addAngent(oneuser.id)">设为代理</el-button>
+        <el-button @click="addAngent(oneuser.id)">에이전트로 설정</el-button>
       </div>
       </div>
     </el-tab-pane>
@@ -457,54 +447,54 @@ const apptx = () => {
 
     <!-- 用户充值弹出框 -->
     <el-dialog v-model="cz" width="600px">
-      <h1>充值</h1>
+      <h1>충전</h1>
     <el-form>
-      <el-form-item label="管理员账户余额" label-width="120px">
+      <el-form-item label="관리자 계정 잔액" label-width="120px">
         <el-input  autocomplete="off" v-model="admincount.game_currency" disabled></el-input>
       </el-form-item>
-      <el-form-item label="充值金额" label-width="100px"> 
+      <el-form-item label="충전 금액" label-width="100px"> 
         <el-input v-model="Czsq.czje" autocomplete="off"></el-input>
         <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
-      <el-button size="small">清空</el-button>
+      <el-button size="small">비우기</el-button>
       </el-form-item>
-      <el-form-item label="交易密码" label-width="100px">
+      <el-form-item label="거래 암호" label-width="100px">
         <el-input v-model="Czsq.czmm" type="password"  show-password  autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="备注" label-width="100px">
+      <el-form-item label="설명" label-width="100px">
         <el-input  autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
-    <el-button type="primary" @click="apply()" >确定</el-button>
+    <el-button type="primary" @click="apply()" >확인</el-button>
     </el-dialog>
 
     <!-- 用户提现弹出框 -->
     <el-dialog v-model="tx" width="600px">
-      <h1>提现</h1>
+      <h1>현금 인출</h1>
     <el-form>
-      <el-form-item label="用户账户余额" label-width="120px">
+      <el-form-item label="사용자 계정 잔액" label-width="120px">
         <el-input  autocomplete="off" v-model="usermoney" disabled></el-input>
       </el-form-item>
-      <el-form-item label="提现金额" label-width="100px"> 
+      <el-form-item label="현금 인출 금액" label-width="120px"> 
         <el-input  autocomplete="off" v-model="Txsq.txje"></el-input>
         <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
       <el-button size="small">100</el-button>
-      <el-button size="small">清空</el-button>
+      <el-button size="small">비우기</el-button>
       </el-form-item>
-      <el-form-item label="交易密码" label-width="100px">
+      <el-form-item label="거래 암호" label-width="100px">
         <el-input v-model="Txsq.txmm" type="password"  show-password  autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="备注" label-width="100px">
+      <el-form-item label="설명" label-width="100px">
         <el-input  autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
-    <el-button type="primary" @click="apptx()">确定</el-button>
+    <el-button type="primary" @click="apptx()">확인</el-button>
     </el-dialog>
 
 

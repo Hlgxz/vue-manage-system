@@ -1,9 +1,9 @@
 import  request  from "../utils/http";
 
 
-export const getTodayAPI = () => {
+export const getTodayAPI = (type:any) => {
    return request({
-       url: '/Statistics/statistics',
+       url: `/Statistics/statistics/${type}`,
        method: 'get',
        
    });

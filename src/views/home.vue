@@ -33,7 +33,7 @@ const router = useRouter();
 const ws = ref();
 
 onMounted(() => {
-  ws.value = new WebSocket('ws://149.104.55.19:2345');
+  ws.value = new WebSocket('wss://emmmmhahahaha.icu/wss');
 
   ws.value.onopen = function() {
     console.log('Connected to Workerman.');

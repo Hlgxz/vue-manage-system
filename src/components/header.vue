@@ -6,17 +6,11 @@ import imgurl from '../assets/img/img.jpg';
 import { getSitesData } from '../api/sites';
 import { useMainStore } from '../store/webselect';
 import { useTagsStore } from '../store/tags';
-import { getwdMessage } from "../api/usermessage";
+
 const username: string | null = localStorage.getItem('ms_username');
 //未读信息查询
-const message: any = ref(null);
-const wdMessage = ()=>{
-	getwdMessage().then(res=>{
-		message.value = res.data
-		
-		
-	})
-}
+
+
 const form = ref({
   region: '',
 })
@@ -31,7 +25,6 @@ onMounted(() => {
 		collapseChage();
 	}
 
-	wdMessage();
 });
 
 // 用户名下拉菜单选择事件
@@ -81,7 +74,7 @@ const handleWeb = (command: string) => {
 		<div class="logo"><div class="web-select" v-permiss="16">
 				<el-select v-model="form.region" placeholder="" @change="handleWeb(form.region)">
 			<el-option label="all" value="0" />
-        <el-option v-for="a in weblest" :label="a.name" :value="a.id" :key="a.id"/>
+        <el-option v-for="a in weblest" :label="a.name" :value="a.web_id" :key="a.id"/>
       </el-select>
 	</div></div>
 		<div class="header-right">

@@ -161,7 +161,7 @@ const toggleAllRows = () => {
       <template #default="scope">
         <div @click="toggleRow(scope.row)" style="cursor: pointer;" class="red">
           
-          {{ scope.row.external.detail?.data.participants[0].bets.length }} 
+          {{ scope.row.external.detail?.data?.participants[0].bets.length }} 
         </div>
         
       </template>
@@ -220,7 +220,7 @@ const toggleAllRows = () => {
             <span>배당</span>
           </template>
       <template #default="scope">
-        {{calculateTotalStake('bet',scope.row.external.detail?.data.participants[0].bets)}}
+        {{calculateTotalStake('bet',scope.row.external.detail?.data?.participants[0].bets)}}
       </template>
     </el-table-column>
     
@@ -232,7 +232,7 @@ const toggleAllRows = () => {
             <span>베팅 금액</span>
           </template>
       <template #default="scope">
-        {{calculateTotalStake('stake',scope.row.external.detail?.data.participants[0].bets)}}
+        {{calculateTotalStake('stake',scope.row.external.detail?.data?.participants[0].bets)}}
       </template>
     </el-table-column>
     <el-table-column  label="예상당첨금액" align="center">
@@ -242,7 +242,7 @@ const toggleAllRows = () => {
             <span>예상당첨금액</span>
           </template>
       <template #default="scope">
-      {{ calculateTotalStake('maxwin',scope.row.external.detail?.data.participants[0].bets) }}
+      {{ calculateTotalStake('maxwin',scope.row.external.detail?.data?.participants[0].bets) }}
     </template>
     </el-table-column>
     <el-table-column  label="당첨 금액" min-width="80" align="center"  >
@@ -252,7 +252,7 @@ const toggleAllRows = () => {
             <span>당첨 금액</span>
           </template>
       <template #default="scope">
-        {{calculateTotalStake('payout',scope.row.external.detail?.data.participants[0].bets)}}
+        {{calculateTotalStake('payout',scope.row.external.detail?.data?.participants[0].bets)}}
       </template>
     </el-table-column>
     <el-table-column  label="손익 금액" min-width="80" align="center"  >
@@ -262,7 +262,7 @@ const toggleAllRows = () => {
             <span>손익 금액</span>
           </template>
       <template #default="scope">
-        {{calculateTotalStake('stake',scope.row.external.detail?.data.participants[0].bets)-  calculateTotalStake('payout',scope.row.external.detail?.data.participants[0].bets)}}
+        {{calculateTotalStake('stake',scope.row.external.detail?.data?.participants[0].bets)-  calculateTotalStake('payout',scope.row.external.detail?.data?.participants[0].bets)}}
       </template>
     </el-table-column>
     
@@ -304,7 +304,7 @@ const toggleAllRows = () => {
             </el-table-column>  
             <el-table-column type="expand" class="hidden-column" :width="0" >
       <template #default="scope">
-        <el-table :data="scope.row.external.detail?.data.participants[0].bets"   :show-header="false" border v-if="scope.row.external.detail?.data.participants[0].bets[0].s">
+        <el-table :data="scope.row.external.detail?.data?.participants[0].bets"   :show-header="false" border v-if="scope.row.external.detail?.data?.participants[0].bets[0].s">
           <el-table-column  label="메모" width="300" align="center">
             <el-input />
           </el-table-column>
@@ -383,7 +383,7 @@ const toggleAllRows = () => {
             </el-table-column>  
          </el-table>
 
-         <div v-if="!scope.row.external.detail?.data.participants[0].bets[0].s" class="CasinoGame my-expand-cell" >
+         <div v-if="!scope.row.external.detail?.data?.participants[0].bets[0].s" class="CasinoGame my-expand-cell" >
           
           <div class="l1">
             <el-tag  >{{ scope.row.details.game.type }}</el-tag>
@@ -391,7 +391,7 @@ const toggleAllRows = () => {
             <p>{{ scope.row.details.game.title }}</p>
           </div>
           <div>
-            {{ scope.row.external.detail?.data.participants[0].bets[0].code }}
+            {{ scope.row.external.detail?.data?.participants[0].bets[0].code }}
           </div>
           <div class="wBaccarat" v-if="scope.row.external?.detail?.data?.gameType =='baccarat'">
   <div class="grid-container">

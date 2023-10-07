@@ -293,7 +293,7 @@ const handleEdit2 = (row: any) => {
         <el-table-column prop="no_at" label="취소일시" align="center">
           <template #header>
             <el-input></el-input>
-            <span>취소일시</span>
+            <span>취소일시</span> 
           </template>
         </el-table-column>
     </el-table>
@@ -309,8 +309,7 @@ const handleEdit2 = (row: any) => {
   <el-divider content-position="left">
     <h3>환전 </h3>
     
-    </el-divider>
-  <el-tabs v-model="active2Name" class="demo-tabs" @tab-change="getwithdrawalList()">
+    </el-divider>  <el-tabs v-model="active2Name" class="demo-tabs" @tab-change="getwithdrawalList()">
     <el-tab-pane :label="`환전신청(${count.total2_1})`" name="1"></el-tab-pane>
     <el-tab-pane :label="`환전완료(${count.total2_2})`" name="2"></el-tab-pane>
     <el-tab-pane :label="`환전취소(${count.total2_0})`" name="0"></el-tab-pane>

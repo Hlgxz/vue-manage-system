@@ -12,7 +12,7 @@ export const fetchData = () => {
 
 //获取单用户数据
 export const getuserData = (id: number) => {
-   return request({
+   return request({            
        url: `/User/read/${id}`,
        method: 'get',
        params:{
@@ -24,7 +24,7 @@ export const getuserData = (id: number) => {
 //分页获取所有交易数据
 export const MoneyData = (page:number | string) => {
    return request({
-       url: '/user/moneylog',
+       url: '/User/MoneyLog',
        method: 'get',
        params:{
          page

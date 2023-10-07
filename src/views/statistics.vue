@@ -3,8 +3,8 @@ import { ref,onMounted } from 'vue';
 import { getTodayAPI,getnccAPI } from '../api/statistics';
 
 const today = ref();
-const getToday = () =>{
-    getTodayAPI().then((res) => {
+const getToday = (type = 1) =>{
+    getTodayAPI(type).then((res) => {
       today.value = res.data.data;
       console.log(today.value);
       
@@ -46,9 +46,17 @@ const xgrqb = () => {
    <div class="statistics-container">
 
     
-
+    <div class="select-container">
+      <div>
+        <el-button-group class="ml-4" size="large">
+    <el-button type="primary" @click="getToday(2)" >일정산 </el-button> 
+    <el-button type="primary" @click="getToday(3)">최근1주씩 정산</el-button>
+    <el-button type="primary" @click="getToday(4)">최근2주씩 정산</el-button>
+    <el-button type="primary" @click="getToday(5)">월정산 </el-button>
+  </el-button-group>
+      </div>
     <div class="select">
-
+      
       <el-select v-model="select_value" placeholder="Select" @change="xgrqb">
     <el-option
       label="Day"
@@ -74,7 +82,7 @@ const xgrqb = () => {
       />
 
       <el-button type="primary" @click="getdata">조회</el-button>
-    </div>
+    </div></div>
      <div class="table">
        <div class="table-row header">
         
@@ -123,7 +131,7 @@ const xgrqb = () => {
        <div class="table-row">
         
          <div class="table-cell gd">베팅 <span class="red-text">당첨</span> 금액 / 명수 / 건수</div>
-         <div class="table-cell" v-for="a in today">{{ a.win_amount }} / {{ a.win_man }} / {{ a.bet_quantity }}</div>
+         <div class="table-cell" v-for="a in today">{{ a.win_amount }} / {{ a.win_man }} / {{ a.win_quantity }}</div>
          <div class="table-cell " v-for="a in ncc">{{ a.win_amount }} / {{ a.win_man }} / {{ a.win_quantity }}</div>
        </div>
        <div class="table-row">
@@ -235,9 +243,14 @@ const xgrqb = () => {
    .blue-text{
     color: #146aac;
    }
+   .select-container{
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+   }
    .select{
     padding: 10px;
-    float: right;
+    
     padding-right: 30px;
    }
    .gd{
